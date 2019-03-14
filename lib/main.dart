@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //paginas
 import './about.dart';
+import './product.dart';
 import './login.dart';
 
 void main() 
@@ -74,6 +75,14 @@ class Home extends StatelessWidget
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => Home())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('produto'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),
