@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 //pages
 import './main.dart';
 
-class AboutPage extends StatefulWidget {
+class ConfigPage extends StatefulWidget {
   @override
-  _AboutPageState  createState() => new _AboutPageState();    
+  _ConfigPage  createState() => new _ConfigPage();    
 }
 
-class _AboutPageState extends State<AboutPage>{
+class _ConfigPage extends State<ConfigPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         
-        title: Text("Sobre"),
+        title: Text("Configurações"),
         backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
       ),
    );

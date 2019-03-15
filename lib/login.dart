@@ -10,19 +10,15 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-
-        ),
-        body: Center(
-          child: Column(
-            
+    return Scaffold(    
+        body: Center(         
+          child: Column(       
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text
               (
-                'Login',
-                style: TextStyle(fontSize: 50)
+                'Lugga',
+                style: TextStyle(fontSize: 45)
               ),
           SizedBox(height: 24.0),
           // "Email" form.
@@ -36,7 +32,7 @@ class _LoginPage extends State<LoginPage> {
             ),
             keyboardType: TextInputType.emailAddress,
           ),
-          SizedBox(height: 24.0),
+          SizedBox(height: 20.0),
           // "Password" form.
           TextFormField(
             decoration: const InputDecoration(
@@ -47,7 +43,7 @@ class _LoginPage extends State<LoginPage> {
               labelText: 'Senha',
             ),
           ),
-          SizedBox(height: 24.0),
+          SizedBox(height: 20.0),
           ButtonBar(
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -61,11 +57,11 @@ class _LoginPage extends State<LoginPage> {
               )
             ],
           ),
+          Divider(),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
-              MaterialButton(
-                color: Colors.red,
+              OutlineButton(
                 child: Text('Entrar com o google'),
                 onPressed: (){
                   Navigator.push(context, MaterialPageRoute(
@@ -81,14 +77,16 @@ class _LoginPage extends State<LoginPage> {
             children: <Widget>[
               OutlineButton(
                 child: Text('Criar Conta'),
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => Home())
+                  );},
               )
             ],
           ),
         ],
           ),
         ),
-        
       );
   }
 }

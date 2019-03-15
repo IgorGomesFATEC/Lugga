@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import './about.dart';
 import './product.dart';
 import './login.dart';
+import './config.dart';
+import './profile.dart';
 
 void main() 
 {
@@ -33,15 +35,18 @@ class Home extends StatelessWidget
     (
       appBar: AppBar(
         
-        title: Text("Lugga"),
+        centerTitle: true ,
+        title: new Text("Lugga"),
 
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
 
         actions: <Widget>[
           IconButton(
             tooltip: 'Categorias',
             icon: Icon(Icons.filter_list),
-            onPressed: (){},
+            onPressed: (){Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
+                  );},
           ),
           IconButton(
             tooltip: 'Search',
@@ -64,14 +69,14 @@ class Home extends StatelessWidget
         child: ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: Text('Brenda Ribon'),
-              accountEmail: Text('brenda s2 Pedro'),
+              accountName: Text('Seu nome'),
+              accountEmail: Text('Seu e-mail'),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(''),
+                backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
               ),
             ),
             ListTile(
-              title: Text('Pagina Principal'),
+              title: Text('Home'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => Home())
@@ -79,10 +84,18 @@ class Home extends StatelessWidget
               },
             ),
             ListTile(
-              title: Text('produto'),
+              title: Text('Meu perfil'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => ProfilePage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Configurações'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ConfigPage())
                   );
               },
             ),
@@ -99,15 +112,16 @@ class Home extends StatelessWidget
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        scrollDirection: Axis.vertical,
-        children: List.generate(100, (index){
+        scrollDirection: Axis.vertical,  
+        children: List.generate(50, (index){
           return Center(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 3.0),
+                border: Border.all(color: Colors.black, width: 2.0),
               ),
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
+              padding: const EdgeInsets.all(10.0),
+              child: 
+              Text(
                 'Item $index',
                 style:Theme.of(context).textTheme.headline,
                 ),

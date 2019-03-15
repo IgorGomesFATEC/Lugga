@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 //pages
 import './main.dart';
 
-class AboutPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _AboutPageState  createState() => new _AboutPageState();    
+  _ProfilePage createState() => new _ProfilePage();    
 }
 
-class _AboutPageState extends State<AboutPage>{
+class _ProfilePage extends State<ProfilePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         
-        title: Text("Sobre"),
+        title: Text("Meu perfil"),
         backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
       ),
    );

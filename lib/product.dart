@@ -20,23 +20,9 @@ class _ProductPage extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         
-        title: Text("Lugga"),
+        title: Text("Produto"),
 
-        backgroundColor: Colors.blueAccent,
-
-        actions: <Widget>[
-          IconButton(
-            tooltip: 'Categorias',
-            icon: Icon(Icons.filter_list),
-            onPressed: (){},
-          ),
-          IconButton(
-            tooltip: 'Search',
-            icon: Icon(Icons.search),
-            onPressed: () async{
-              await showSearch();
-            },
-          ),
+        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),        
           /*PopupMenuButton(
             itemBuilder: (BuildContext context){
               return [
@@ -45,7 +31,6 @@ class _ProductPage extends State<ProductPage> {
               ];
             },
           )*/
-        ],
       ),
       
       body: ListView(
