@@ -21,6 +21,7 @@ class LuggaApp extends StatelessWidget
     return MaterialApp
     (
       home: new LoginPage(),
+      debugShowCheckedModeBanner: false, 
     );
   }
     
