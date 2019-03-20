@@ -9,28 +9,120 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  Widget _loginButtons()
+  {
+    return Container(
+      padding:EdgeInsets.all(10),
+      
+      child: Row(
+        children: <Widget>[
+        Expanded(
+          child:Container(
+            height: 40,
+            width: 170,
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              shadowColor: Colors.black87,
+              
+              elevation: 10.0,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => Home())
+                  );
+                },
+                child: Center(
+                  child: Text('Entrar',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+        ),
+           Container(
+            height: 40,
+            width: 170,
+            margin: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              shadowColor: Colors.black87,
+              //color: Colors.red,
+              elevation: 10.0,
+              child: GestureDetector(
+                onTap: (){},
+                child: Center(
+                  child: Text('Login com Google',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+      ),
+    );
+  }
+
+
   Widget build(BuildContext context) {
-    return Scaffold(    
+    return Scaffold(   
+      resizeToAvoidBottomPadding: false,
+      backgroundColor: new Color.fromARGB(210, 0, 243, 255),
+      
+      
         body: Center(         
-          child: Column(       
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Container(
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text
               (
                 'Lugga',
-                style: TextStyle(fontSize: 45)
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 45,
+                  shadows: <Shadow>[
+                  Shadow(
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 8.0,
+                  color: Colors.black54
+                )
+            ]
+                  )
               ),
           SizedBox(height: 24.0),
           // "Email" form.
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              filled: true,
-              icon: Icon(Icons.email),
-              hintText: 'Digite se email',
-              labelText: 'E-mail',
+          Container(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Digite se email',
             ),
             keyboardType: TextInputType.emailAddress,
+          ),
+              ],
+            ),
           ),
           SizedBox(height: 20.0),
           // "Password" form.
@@ -38,53 +130,45 @@ class _LoginPage extends State<LoginPage> {
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               filled: true,
-              icon: Icon(Icons.lock_outline),
+            
               hintText: 'Digite sua Senha',
               labelText: 'Senha',
             ),
           ),
           SizedBox(height: 20.0),
-          ButtonBar(
-            alignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              OutlineButton(
-                child: Text('Entrar'),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => Home())
-                  );
-                },
-              )
-            ],
+          _loginButtons(),
+          Container(
+            margin: EdgeInsets.all(10),
+            child: Divider(color: Colors.black45,),
           ),
-          Divider(),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              OutlineButton(
-                child: Text('Entrar com o google'),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => Home())
-                  );
-                },
-              )
-            ],
-          ),
-          Divider(),
-           ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              OutlineButton(
-                child: Text('Criar Conta'),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => Home())
-                  );},
-              )
-            ],
+           Container(
+            height: 40,
+            width: 170,
+            margin: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              shadowColor: Colors.black87,
+              //color: Colors.red,
+              elevation: 10.0,
+              child: GestureDetector(
+                onTap: (){},
+                child: Center(
+                  child: Text('Criar conta',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
+            ),      
           ),
         ),
       );

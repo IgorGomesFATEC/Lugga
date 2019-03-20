@@ -35,11 +35,21 @@ class Home extends StatelessWidget
     return Scaffold
     (
       appBar: AppBar(
-        
         centerTitle: true ,
-        title: new Text("Lugga"),
+        title: new Text("Lugga",
+        style: TextStyle(
+        color: Colors.white,
+        shadows: <Shadow>[
+        Shadow(
+        offset: Offset(2.0, 2.0),
+        blurRadius: 8.0,
+        color: Colors.black54
+              )
+            ]
+          )
+        ),
 
-        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
 
         actions: <Widget>[
           IconButton(
@@ -70,6 +80,15 @@ class Home extends StatelessWidget
         child: ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+              color: Color.fromARGB(127, 60, 243, 255),
+              boxShadow: [
+              BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5.0,
+                  ),
+                ],
+              ),
               accountName: Text('Seu nome'),
               accountEmail: Text('Seu e-mail'),
               currentAccountPicture: CircleAvatar(
