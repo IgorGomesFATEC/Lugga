@@ -6,6 +6,7 @@ import './product.dart';
 import './login.dart';
 import './config.dart';
 import './profile.dart';
+import './geolocation.dart';
 
 void main() 
 {
@@ -80,6 +81,14 @@ class Home extends StatelessWidget
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => Home())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('localização by Negueba'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => GetLocationPage())
                   );
               },
             ),
