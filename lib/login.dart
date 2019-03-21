@@ -31,8 +31,8 @@ class _LoginPage extends State<LoginPage> {
               shadowColor: Colors.black87,
               
               elevation: 10.0,
-              child: GestureDetector(
-                onTap: (){
+              child: MaterialButton(
+                onPressed: (){
                   Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => Home())
                   );
