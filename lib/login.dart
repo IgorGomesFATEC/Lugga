@@ -9,6 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  bool _obscureText = true;
   Widget _loginButtons()
   {
     return Container(
@@ -64,13 +65,25 @@ class _LoginPage extends State<LoginPage> {
               elevation: 10.0,
               child: GestureDetector(
                 onTap: (){},
-                child: Center(
-                  child: Text('Login com Google',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
-                  ),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      
+                      child: Container(
+                        padding: EdgeInsets.all(7),
+                        child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_"G"_Logo.svg/600px-Google_"G"_Logo.svg.png',) //ImageIcon(AssetImage('assets/googleG.png')),,
+                      )
+                    ),
+                    Center(
+                        child: Text('Entrar com Google',
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -85,8 +98,6 @@ class _LoginPage extends State<LoginPage> {
     return Scaffold(   
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
-      
-      
         body: Center(         
           child: Container(
             padding: EdgeInsets.all(5),
@@ -112,34 +123,100 @@ class _LoginPage extends State<LoginPage> {
           SizedBox(height: 24.0),
           // "Email" form.
           Container(
+            padding:EdgeInsets.all(10),
+            decoration: BoxDecoration(
+            
+          ),
             child: Column(
               children: <Widget>[
-                TextField(
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
-                    hintText: 'Digite se email',
+                  focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  ),
+                  hintText: 'Digite seu email',
+                  hintStyle: TextStyle(color: Colors.white),
+                  suffixIcon: GestureDetector(
+                    onTap: (){ },
+                    child: IconTheme(
+                      data: IconThemeData(
+                        color: Colors.white,
+                      ),
+                      child: Icon(Icons.alternate_email),
+                    )
+                  ),
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
             ),
-            keyboardType: TextInputType.emailAddress,
           ),
               ],
             ),
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 30.0),
           // "Password" form.
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              filled: true,
+          Container(
+            padding:EdgeInsets.all(10),
+            decoration: BoxDecoration(
             
-              hintText: 'Digite sua Senha',
-              labelText: 'Senha',
+          ),
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  ),
+                  hintText: 'Digite sua senha',
+                  hintStyle: TextStyle(color: Colors.white),
+                  suffixIcon: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                       _obscureText = !_obscureText; 
+                      });
+                    },
+                    child: IconTheme(
+                      data: IconThemeData(
+                        color: Colors.white,
+                      ),
+                      child: Icon(_obscureText ? Icons.visibility:Icons.visibility_off),
+                    )
+                  ),
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
             ),
           ),
+              ],
+            ),
+          ),
+            
           SizedBox(height: 20.0),
           _loginButtons(),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Divider(color: Colors.black45,),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  child: Divider(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Text(
+                'OU',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              Expanded(
+                child:Container(
+                  margin: EdgeInsets.all(10),
+                  child: Divider(
+                    color: Colors.white,
+                  ),
+                ) ,
+                ),
+            ],
           ),
            Container(
             height: 40,
