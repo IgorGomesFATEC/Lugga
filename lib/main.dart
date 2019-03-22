@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-//paginas
+//Páginas
 import './about.dart';
 import './product.dart';
 import './login.dart';
 import './config.dart';
 import './profile.dart';
+import './categoria.dart';
 import './geolocation.dart';
 
 void main() 
@@ -57,7 +58,7 @@ class Home extends StatelessWidget
             tooltip: 'Categorias',
             icon: Icon(Icons.filter_list),
             onPressed: (){Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => CategoriaPage())
                   );},
           ),
           IconButton(
@@ -105,10 +106,18 @@ class Home extends StatelessWidget
               },
             ),
             ListTile(
-              title: Text('localização by Negueba'),
+              title: Text('Localização'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => GetLocationPage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Câmera'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),
@@ -117,6 +126,14 @@ class Home extends StatelessWidget
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => ProfilePage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Meus produtos'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => AboutPage())
                   );
               },
             ),
@@ -136,6 +153,31 @@ class Home extends StatelessWidget
                   );
               },
             ),
+            /* Quando o usuário não estiver cadastrado remover o código:
+            "currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
+              ),
+              "accountEmail: Text('Seu e-mail')," 
+              Alterar:
+              "accountName: Text('Seu nome')," para "accountName: Text('Faça login para locar seus produtos'),"
+
+              Deixar apenas esses dois ListTitle:       
+              ListTile(
+              title: Text('Entrar'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => LoginPage())
+                  );
+              },
+            ),
+              ListTile(
+              title: Text('Sobre'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => AboutPage())
+                  );
+              },
+            */   
           ],
         ),
       ),

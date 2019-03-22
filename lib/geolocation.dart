@@ -17,7 +17,24 @@ class _GetLocationPageState extends State<GetLocationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true ,
+        title: new Text("Lugga",
+        style: TextStyle(
+        color: Colors.white,
+        shadows: <Shadow>[
+        Shadow(
+        offset: Offset(2.0, 2.0),
+        blurRadius: 8.0,
+        color: Colors.black54
+              )
+            ]
+          )
+        ),
+
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +68,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
   Future<Map<String, double>> _getLocation() async {
     var currentLocation = <String, double>{};
     try {
-      currentLocation = await location.getLocation();
+    currentLocation = await location.getLocation();
     } catch (e) {
       currentLocation = null;
     }
