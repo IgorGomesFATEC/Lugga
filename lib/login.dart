@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 //pages
-import './main.dart';
+import './home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +12,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;
+  String _email,_password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Widget _loginButtons()
   {
     return Container(
@@ -32,11 +36,7 @@ class _LoginPage extends State<LoginPage> {
               
               elevation: 10.0,
               child: MaterialButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => Home())
-                  );
-                },
+                onPressed: _Login,
                 child: Center(
                   child: Text('Entrar',
                   style: TextStyle(
@@ -98,7 +98,9 @@ class _LoginPage extends State<LoginPage> {
     return Scaffold(   
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
-        body: Center(         
+        body: Form(
+          key: _formKey,
+          child: Center( 
           child: Container(
             padding: EdgeInsets.all(5),
             margin: EdgeInsets.all(20),
@@ -130,6 +132,13 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  validator: (input){if(input.isEmpty){
+                    SnackBar(
+                      content: Text('erro'),
+                      duration: Duration(milliseconds: 500),
+                    );
+                  }},
+                  onSaved: (input)=> _email =input,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                   focusedBorder: UnderlineInputBorder(
@@ -162,6 +171,12 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  validator: (input){
+                    if(input.length<6){
+                      return 'Sua Senha precisa ter mais que 6 digitos';
+                    }
+                  },
+                  onSaved: (input)=>_password =input,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                   focusedBorder: UnderlineInputBorder(
@@ -247,7 +262,23 @@ class _LoginPage extends State<LoginPage> {
         ],
             ),      
           ),
+        ) ,
         ),
       );
   }
+    Future<void> _Login() async {
+    final formState = _formKey.currentState;
+    if(formState.validate()==true){
+      formState.save();
+      try {
+        FirebaseUser user =await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email ,password:_password);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user,)));
+      } catch (e) {
+        print(e.message);
+      }
+      }
+      else{
+        print(formState);
+      }
+    }
 }
