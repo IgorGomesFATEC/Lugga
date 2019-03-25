@@ -15,7 +15,7 @@ class _ConfigPage extends State<ConfigPage>{
       appBar: AppBar(
         
         title: Text("Configurações"),
-        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
       ),
    );
   }

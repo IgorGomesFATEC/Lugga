@@ -19,10 +19,21 @@ class _ProductPage extends State<ProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
-        title: Text("Produto"),
+        centerTitle: true ,
+        title: new Text("Lugga",
+        style: TextStyle(
+        color: Colors.white,
+        shadows: <Shadow>[
+        Shadow(
+        offset: Offset(2.0, 2.0),
+        blurRadius: 8.0,
+        color: Colors.black54
+              )
+            ]
+          )
+        ),
 
-        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),        
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),       
           /*PopupMenuButton(
             itemBuilder: (BuildContext context){
               return [
