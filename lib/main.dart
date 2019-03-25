@@ -17,6 +17,5 @@ class LuggaApp extends StatelessWidget
       home: new LoginPage(),
       debugShowCheckedModeBanner: false, 
     );
-  }
-    
+  }   
 }
