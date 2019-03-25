@@ -12,8 +12,7 @@ class LuggaApp extends StatelessWidget
     
     return MaterialApp
     (
-      title: 'Lugga',
-      theme: ThemeData(primaryColor:  Color.fromARGB(127, 0, 243, 255),primarySwatch: Colors.green),
+      theme: ThemeData(primarySwatch: Colors.grey,cursorColor: Colors.white),
       home: new LoginPage(),
       debugShowCheckedModeBanner: false, 
     );

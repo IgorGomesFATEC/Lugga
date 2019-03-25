@@ -132,14 +132,14 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  validator: (input){if(input.isEmpty){
-                    SnackBar(
-                      content: Text('erro'),
-                      duration: Duration(milliseconds: 500),
-                    );
-                  }},
+                  validator: (input){
+                    if(input.length<1){
+                      return 'Digite um e-mail!';
+                    }
+                  },
                   onSaved: (input)=> _email =input,
                   keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                   focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
@@ -172,10 +172,11 @@ class _LoginPage extends State<LoginPage> {
               children: <Widget>[
                 TextFormField(
                   validator: (input){
-                    if(input.length<6){
-                      return 'Sua Senha precisa ter mais que 6 digitos';
+                    if(input.length<1){
+                      return 'Digite uma senha!';
                     }
                   },
+                  style: TextStyle(color: Colors.white),
                   onSaved: (input)=>_password =input,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
