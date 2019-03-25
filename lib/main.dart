@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 //paginas
@@ -7,8 +8,10 @@ import './login.dart';
 import './config.dart';
 import './profile.dart';
 import './geolocation.dart';
+import './chat/home_page.dart';
 
-void main() 
+
+void main()  
 {
   LuggaApp lugga = new LuggaApp();
   runApp(lugga); 
@@ -101,6 +104,14 @@ class Home extends StatelessWidget
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => Home())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Chat'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ChatPage())
                   );
               },
             ),
