@@ -13,10 +13,13 @@ class _AboutPageState extends State<AboutPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         title: Text("Sobre"),
-        backgroundColor: new Color.fromRGBO(153, 255, 153, 30),
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
       ),
-   );
+      body: Center(
+          child: Text('Lugga um aplicativo da empresa Zukunfty Criado pelos alunos da Fatec Rio Preto Igor Augusto Gomes Pedro Brandt Zanqueta Gabriel Bezerra Pereira'),
+   ),
+    
+    );
   }
 }
