@@ -7,7 +7,9 @@ import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
 import './product.dart';
+import './chat/home_page.dart';
 import './login.dart';
+import './categoria.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage>
             tooltip: 'Categorias',
             icon: Icon(Icons.filter_list),
             onPressed: (){Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => CategoriaPage())
                   );},
           ),
           IconButton(
@@ -132,6 +134,22 @@ class _HomePageState extends State<HomePage>
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => AboutPage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Chat'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ChatPage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Camera'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),
