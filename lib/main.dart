@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-//Páginas
+//Página
 import './login.dart';
 
 void main() => runApp(LuggaApp());
