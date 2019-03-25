@@ -30,7 +30,6 @@ class _HomePageState extends State<HomePage>
       appBar: AppBar(
         centerTitle: true ,
         title: new Text('Lugga ${widget.user.email}',
-        
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
