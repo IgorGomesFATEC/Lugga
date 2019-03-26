@@ -1,101 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
 //pages
-import './home.dart';
-import './createAccount.dart';
-
-class LoginPage extends StatefulWidget {
+import './login.dart';
+class CreateAccountPage extends StatefulWidget {
   @override
-  _LoginPage createState() => new _LoginPage(); 
+  _CreateAccountPage createState() => new _CreateAccountPage();
 }
 
-class _LoginPage extends State<LoginPage> {
-  bool _obscureText = true;
-  String _email,_password;
+class _CreateAccountPage extends State<CreateAccountPage> {
+  
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Widget _loginButtons()
-  {
-    return Container(
-      padding:EdgeInsets.all(10),
-      
-      child: Row(
-        children: <Widget>[
-        Expanded(
-          child:Container(
-            height: 40,
-            width: 170,
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              shadowColor: Colors.black87,
-              
-              elevation: 10.0,
-              child: MaterialButton(
-                onPressed: _Login,
-                child: Center(
-                  child: Text('Entrar',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
-                  ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+  String _email, _password;
+  bool _obscureText = true;
 
-        ),
-           Container(
-            height: 40,
-            width: 172,
-            margin: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              shadowColor: Colors.black87,
-              //color: Colors.red,
-              elevation: 10.0,
-              child: MaterialButton(
-                onPressed: (){},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      
-                      child: Container(
-                        padding: EdgeInsets.all(7),
-                        child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_"G"_Logo.svg/600px-Google_"G"_Logo.svg.png',) //ImageIcon(AssetImage('assets/googleG.png')),,
-                      )
-                    ),
-                    Center(
-                        child: Text('Entrar com Google',
-                        style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-      ],
-      ),
-    );
-  }
-
-
+  @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(   
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
@@ -110,7 +30,7 @@ class _LoginPage extends State<LoginPage> {
             children: <Widget>[
               Text
               (
-                'Lugga',
+                'Criar Conta',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 45,
@@ -134,8 +54,8 @@ class _LoginPage extends State<LoginPage> {
               children: <Widget>[
                 TextFormField(
                   validator: (input){
-                    if(input.length<1){
-                      return 'Digite um e-mail!';
+                    if(input == null){
+                      return 'Digite seu e-mail!';
                     }
                   },
                   onSaved: (input)=> _email =input,
@@ -172,13 +92,17 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  onFieldSubmitted: (String value){
+                    setState(() {
+                     this._password = value; 
+                    });
+                  },
                   validator: (input){
                     if(input.length<1){
                       return 'Digite uma senha!';
                     }
                   },
                   style: TextStyle(color: Colors.white),
-                  onSaved: (input)=>_password =input,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                   focusedBorder: UnderlineInputBorder(
@@ -205,36 +129,39 @@ class _LoginPage extends State<LoginPage> {
               ],
             ),
           ),
-            
+          
           SizedBox(height: 20.0),
-          _loginButtons(),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  child: Divider(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Text(
-                'OU',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-              Expanded(
-                child:Container(
-                  margin: EdgeInsets.all(10),
-                  child: Divider(
-                    color: Colors.white,
-                  ),
-                ) ,
-                ),
-            ],
+          Container(
+            padding:EdgeInsets.all(10),
+            decoration: BoxDecoration(
+            
           ),
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  enabled: this._password != null && this._password.isNotEmpty,
+                  validator: (input){
+                    if(input.length<1){
+                      return 'Confirme sua senha';
+                    }
+                  },
+                  style: TextStyle(color: Colors.white),
+                  onSaved: (input)=>_password =input,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  ),
+                  hintText: 'Digite sua senha',
+                  hintStyle: TextStyle(color: Colors.white),
+                  
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
+            ),
+          ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20,),
            Container(
             height: 40,
             width: 170,
@@ -250,9 +177,7 @@ class _LoginPage extends State<LoginPage> {
               elevation: 10.0,
               child: MaterialButton(
                 onPressed: (){
-                   Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => CreateAccountPage())
-                  );
+                  signUp();
                 },
                 child: Center(
                   child: Text('Criar conta',
@@ -272,19 +197,15 @@ class _LoginPage extends State<LoginPage> {
         ),
       );
   }
-    Future<void> _Login() async {
-    final formState = _formKey.currentState;
-    if(formState.validate()==true){
-      formState.save();
-      try {
-        FirebaseUser user =await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email ,password:_password);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user,)));
-      } catch (e) {
+   void signUp() async {
+    if(_formKey.currentState.validate()){
+      _formKey.currentState.save();
+      try{
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }catch(e){
         print(e.message);
       }
-      }
-      else{
-        print(formState);
-      }
     }
+  }
 }
