@@ -30,7 +30,7 @@ class ChatScreenState extends State<ChatScreen> {
             new Flexible(
               child: new TextField(
                 decoration:
-                    new InputDecoration.collapsed(hintText: "Send a message"),
+                    new InputDecoration.collapsed(hintText: "Envie uma mensagem"),
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
               ),

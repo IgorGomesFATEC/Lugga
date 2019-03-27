@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-//pages
-import './main.dart';
-
 class AboutPage extends StatefulWidget {
   @override
   _AboutPageState  createState() => new _AboutPageState();    

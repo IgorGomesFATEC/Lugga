@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'main.dart';
-
 
 class GetLocationPage extends StatefulWidget {
   @override
@@ -19,7 +17,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true ,
-        title: new Text("Lugga",
+        title: new Text("Lugga Localização",
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
@@ -41,10 +39,10 @@ class _GetLocationPageState extends State<GetLocationPage> {
           children: <Widget>[
             userLocation == null
                 ? CircularProgressIndicator()
-                : Text("Location:" +
-                    userLocation["latitude"].toString() +
+                : Text("Localização:" +
+                    userLocation["Latitude"].toString() +
                     " " +
-                    userLocation["longitude"].toString()),
+                    userLocation["Longitude"].toString()),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: RaisedButton(
@@ -56,7 +54,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
                   });
                 },
                 color: Colors.blue,
-                child: Text("Sua localização :", style: TextStyle(color: Colors.white),),
+                child: Text("Você está em", style: TextStyle(color: Colors.white),),
               ),
             ),
           ],

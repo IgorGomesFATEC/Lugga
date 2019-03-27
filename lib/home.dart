@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 //pages
-import './config.dart';
 import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
@@ -31,7 +30,7 @@ class _HomePageState extends State<HomePage>
     (
       appBar: AppBar(
         centerTitle: true ,
-        title: new Text('Lugga ${widget.user.email}',
+        title: new Text('Lugga',
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
@@ -60,14 +59,6 @@ class _HomePageState extends State<HomePage>
             onPressed: () {
             },
           ),
-          /*PopupMenuButton(
-            itemBuilder: (BuildContext context){
-              return [
-                PopupMenuItem(child: Text('Minha conta')),
-                PopupMenuItem(child: Text('Historico'))
-              ];
-            },
-          )*/
         ],
       ),
       drawer: Drawer(
@@ -84,32 +75,16 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
               accountName: Text('Seu nome'),
-              accountEmail: Text('Seu e-mail'),
+              accountEmail: Text('${widget.user.email}'),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
               ),
-            ),
-             ListTile(
-              title: Text('Login'),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => LoginPage())
-                  );
-              },
             ),
             ListTile(
               title: Text('Home'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => HomePage())
-                  );
-              },
-            ),
-            ListTile(
-              title: Text('localização by Negueba'),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => GetLocationPage())
                   );
               },
             ),
@@ -122,18 +97,18 @@ class _HomePageState extends State<HomePage>
               },
             ),
             ListTile(
-              title: Text('Configurações'),
+              title: Text('Câmera'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ConfigPage())
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),
             ListTile(
-              title: Text('Sobre'),
+              title: Text('Localização'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => AboutPage())
+                  builder: (BuildContext context) => GetLocationPage())
                   );
               },
             ),
@@ -146,17 +121,25 @@ class _HomePageState extends State<HomePage>
               },
             ),
             ListTile(
-              title: Text('Camera'),
+              title: Text('Login'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => LoginPage())
+                  );
+              },
+            ),
+            ListTile(
+              title: Text('Sobre'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => AboutPage())
                   );
               },
             ),
           ],
         ),
       ),
-      body: GridView.count(
+      body:GridView.count(
         crossAxisCount: 2,
         scrollDirection: Axis.vertical,  
         children: List.generate(50, (index){
@@ -177,5 +160,4 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
-  
 }

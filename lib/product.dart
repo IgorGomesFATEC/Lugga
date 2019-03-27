@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-//pages
-//import './main.dart';
-//import './about.dart';
+//Pages
 import 'package:image_picker/image_picker.dart';
 
 class ProductPage extends StatefulWidget {
@@ -20,7 +18,7 @@ class _ProductPage extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true ,
-        title: new Text("Lugga",
+        title: new Text("Lugga Produto",
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
@@ -33,17 +31,8 @@ class _ProductPage extends State<ProductPage> {
           )
         ),
 
-        backgroundColor: new Color.fromARGB(127, 0, 243, 255),       
-          /*PopupMenuButton(
-            itemBuilder: (BuildContext context){
-              return [
-                PopupMenuItem(child: Text('Minha conta')),
-                PopupMenuItem(child: Text('Historico'))
-              ];
-            },
-          )*/
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),           
       ),
-      
       body: ListView(
         children: <Widget>[
           ButtonBar(

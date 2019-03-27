@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String _name = "Igor Lindo";
+const String _name = "Usuário";
 
 class ChatMessage extends StatelessWidget {
   final String text;

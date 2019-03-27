@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-//pages
-import './main.dart';
-
 class CategoriaPage extends StatefulWidget {
   @override
   _CategoriaPage createState() => new _CategoriaPage();    

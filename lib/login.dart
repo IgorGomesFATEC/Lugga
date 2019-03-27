@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
 
 //pages
 import './home.dart';
@@ -19,7 +19,6 @@ class _LoginPage extends State<LoginPage> {
   {
     return Container(
       padding:EdgeInsets.all(10),
-      
       child: Row(
         children: <Widget>[
         Expanded(
@@ -34,7 +33,6 @@ class _LoginPage extends State<LoginPage> {
             child: Material(
               borderRadius: BorderRadius.circular(20),
               shadowColor: Colors.black87,
-              
               elevation: 10.0,
               child: MaterialButton(
                 onPressed: _Login,
@@ -49,7 +47,6 @@ class _LoginPage extends State<LoginPage> {
               ),
             ),
           ),
-
         ),
            Container(
             height: 40,
@@ -70,7 +67,6 @@ class _LoginPage extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                      
                       child: Container(
                         padding: EdgeInsets.all(7),
                         child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_"G"_Logo.svg/600px-Google_"G"_Logo.svg.png',) //ImageIcon(AssetImage('assets/googleG.png')),,
@@ -93,7 +89,6 @@ class _LoginPage extends State<LoginPage> {
       ),
     );
   }
-
 
   Widget build(BuildContext context) {
     return Scaffold(   
@@ -127,9 +122,7 @@ class _LoginPage extends State<LoginPage> {
           // "Email" form.
           Container(
             padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            
-          ),
+            decoration: BoxDecoration(),
             child: Column(
               children: <Widget>[
                 TextFormField(
@@ -205,7 +198,6 @@ class _LoginPage extends State<LoginPage> {
               ],
             ),
           ),
-            
           SizedBox(height: 20.0),
           _loginButtons(),
           Row(

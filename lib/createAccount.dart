@@ -15,7 +15,6 @@ class _CreateAccountPage extends State<CreateAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(   
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
@@ -47,9 +46,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
           // "Email" form.
           Container(
             padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            
-          ),
+            decoration: BoxDecoration(),
             child: Column(
               children: <Widget>[
                 TextFormField(
@@ -86,9 +83,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
           // "Password" form.
           Container(
             padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            
-          ),
+            decoration: BoxDecoration(),
             child: Column(
               children: <Widget>[
                 TextFormField(
@@ -129,13 +124,10 @@ class _CreateAccountPage extends State<CreateAccountPage> {
               ],
             ),
           ),
-          
           SizedBox(height: 20.0),
           Container(
             padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            
-          ),
+            decoration: BoxDecoration(),
             child: Column(
               children: <Widget>[
                 TextFormField(
@@ -153,8 +145,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                   borderSide: BorderSide(color: Colors.white),
                   ),
                   hintText: 'Digite sua senha',
-                  hintStyle: TextStyle(color: Colors.white),
-                  
+                  hintStyle: TextStyle(color: Colors.white),      
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
             ),
           ),
