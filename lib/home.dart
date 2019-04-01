@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage>
               accountEmail: Text('${widget.user.email}'),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
+               //backgroundImage: Image.asset('assets/profile.png'),
               ),
             ),
             ListTile(
