@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
-import './product.dart';
+import './camera.dart';
 import './chat/home_page.dart';
 import './login.dart';
 import './categoria.dart';
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage>
               title: Text('Câmera'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => CameraPage())
                   );
               },
             ),

@@ -247,7 +247,7 @@ class _LoginPage extends State<LoginPage> {
                   );
                 },
                 child: Center(
-                  child: Text('Criar conta',
+                  child: Text('Criar uma conta',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 //Pages
 import 'package:image_picker/image_picker.dart';
 
-class ProductPage extends StatefulWidget {
+class CameraPage extends StatefulWidget {
   @override
-  _ProductPage createState() => _ProductPage();
+  _CameraPage createState() => _CameraPage();
 }
 
-class _ProductPage extends State<ProductPage> {
+class _CameraPage extends State<CameraPage> {
   File _imageFile;
 
   @override
@@ -18,7 +18,7 @@ class _ProductPage extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true ,
-        title: new Text("Lugga Produto",
+        title: new Text("Lugga Câmera",
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
