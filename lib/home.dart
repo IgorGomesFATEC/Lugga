@@ -5,10 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
-import './product.dart';
+import './camera.dart';
 import './chat/home_page.dart';
 import './login.dart';
 import './categoria.dart';
+import './product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage>
               accountEmail: Text('${widget.user.email}'),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
+               //backgroundImage: Image.asset('assets/profile.png'),
               ),
             ),
             ListTile(
@@ -102,7 +104,7 @@ class _HomePageState extends State<HomePage>
               title: Text('Câmera'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage())
+                  builder: (BuildContext context) => CameraPage())
                   );
               },
             ),
@@ -111,6 +113,14 @@ class _HomePageState extends State<HomePage>
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => GetLocationPage())
+                  );
+              },
+            ),
+             ListTile(
+              title: Text('Produto'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),

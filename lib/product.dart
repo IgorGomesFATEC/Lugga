@@ -1,24 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-
-//Pages
-//import './call_camera.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProductPage extends StatefulWidget {
   @override
   _ProductPage createState() => _ProductPage();
 }
 
-class _ProductPage extends State<ProductPage>  {
-  File _imageFile;
+class _ProductPage extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true ,
-        title: new Text("Lugga Produto",
+        centerTitle: true,
+        title: new Text('Lugga Produto',
         style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
@@ -30,36 +23,42 @@ class _ProductPage extends State<ProductPage>  {
             ]
           )
         ),
-
-        backgroundColor: new Color.fromARGB(127, 0, 243, 255),           
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
       ),
-      body: ListView(
-        children: <Widget>[
-          ButtonBar(
+      body:(
+        Column(
             children: <Widget>[
-              IconButton(
-              icon: Icon(Icons.photo_camera),
-              onPressed: () async => await _tiraFoto(),
-              tooltip: 'Tire uma Foto',
+              Image.asset(
+                'assets/example.png',
+                width: 450.0,
+                height: 275.0,
+                fit: BoxFit.cover,
               ),
-            IconButton(
-              icon: Icon(Icons.photo),
-              onPressed: () async => await _galeria(),
-              tooltip: 'Pegue da galeria',
+              Text('Título do produto', 
+              style: TextStyle(
+              
               ),
+              ),
+              Text('Descrição do produto', 
+              style: TextStyle(
+              
+              ),
+              )
             ],
-          ),
-          this._imageFile == null ? Placeholder() : Image.file(this._imageFile),
-        ],
+          )
+      ),
+      floatingActionButton: Container(
+        height: 125.0,
+        width: 125.0,
+        child: FittedBox(
+          child: FloatingActionButton.extended(
+          onPressed: (){},
+          icon: Icon(Icons.add_shopping_cart, color: Colors.white,),
+          label: Text("Lugga!", style: TextStyle(color: Colors.white),),
+          backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+            ),
+        ),
       ),
     );
-  }
-  Future<Null> _tiraFoto() async{
-    final File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(()=> this._imageFile =imageFile);
-  }
-    Future<Null> _galeria() async{
-      final File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(()=> this._imageFile =imageFile);
   }
 }

@@ -15,9 +15,14 @@ class _CreateAccountPage extends State<CreateAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(   
+    return Scaffold( 
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
+      appBar: AppBar(
+        leading: IconButton(icon:Icon(Icons.arrow_back),
+          onPressed:() => Navigator.pop(context, false),
+        )
+      ), 
         body: Form(
           key: _formKey,
           child: Center( 
@@ -134,7 +139,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                   enabled: this._password != null && this._password.isNotEmpty,
                   validator: (input){
                     if(input.length<1){
-                      return 'Confirme sua senha';
+                      return 'Confirme sua senha!';
                     }
                   },
                   style: TextStyle(color: Colors.white),
@@ -144,7 +149,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                   focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   ),
-                  hintText: 'Digite sua senha',
+                  hintText: 'Confirme sua senha',
                   hintStyle: TextStyle(color: Colors.white),      
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
             ),

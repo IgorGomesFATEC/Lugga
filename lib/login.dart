@@ -90,7 +90,7 @@ class _LoginPage extends State<LoginPage> {
                     Center(
                       child: Container(
                         padding: EdgeInsets.all(7),
-                        child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_"G"_Logo.svg/600px-Google_"G"_Logo.svg.png',) //ImageIcon(AssetImage('assets/googleG.png')),,
+                        child: Image.asset('assets/googleG.png')
                       )
                     ),
                     Center(
@@ -268,7 +268,7 @@ class _LoginPage extends State<LoginPage> {
                   );
                 },
                 child: Center(
-                  child: Text('Criar conta',
+                  child: Text('Criar uma conta',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold
