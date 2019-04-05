@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 //pages
 import './home.dart';
+import './teste.dart';
 import './createAccount.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,9 +13,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-  bool _obscureText = true;
+  bool _obscureText = true,_busy =false;
   String _email,_password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final kGoogleSignIn = GoogleSignIn();
+  final kFirebaseAuth = FirebaseAuth.instance;
+  FirebaseUser _user;
+
+   @override
+  void initState() {
+    super.initState();
+    kFirebaseAuth.currentUser().then(
+          (user) => setState(() => this._user = user),
+        );
+  }
+
+
   Widget _loginButtons()
   {
     return Container(
@@ -62,7 +76,14 @@ class _LoginPage extends State<LoginPage> {
               //color: Colors.red,
               elevation: 10.0,
               child: MaterialButton(
-                onPressed: (){},
+                onPressed: this._busy
+                ? null
+                : () async {
+                  setState(() => this._busy = true);
+                  final user = await this._googleSignIn();
+                  this._showUserProfilePage(user);
+                  setState(() => this._busy = false);
+            },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -269,8 +290,8 @@ class _LoginPage extends State<LoginPage> {
     if(formState.validate()==true){
       formState.save();
       try {
-        FirebaseUser user =await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email ,password:_password);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user,)));
+        _user =await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email ,password:_password);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: _user,)));
       } catch (e) {
         print(e.message);
       }
@@ -279,4 +300,63 @@ class _LoginPage extends State<LoginPage> {
         print(formState);
       }
     }
+
+      // Sign in with Google.
+    Future<FirebaseUser> _googleSignIn() async {
+      final curUser = this._user ?? await kFirebaseAuth.currentUser();
+      if (curUser != null && !curUser.isAnonymous) {
+        return curUser;
+      }
+      final googleUser = await kGoogleSignIn.signIn();
+      final googleAuth = await googleUser.authentication;
+      // Note: user.providerData[0].photoUrl == googleUser.photoUrl.
+      final user = await kFirebaseAuth.signInWithGoogle(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+     // kFirebaseAnalytics.logLogin();
+      setState(() => this._user = user);
+      return user;
+    }
+
+      // Show user's profile in a new screen.
+  void _showUserProfilePage(FirebaseUser user) {
+     Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) =>Scaffold(
+              appBar: AppBar(
+                title: Text('user profile'),
+              ),
+              body: ListView(
+                children: <Widget>[
+                  ListTile(title: Text('User id: ${user.uid}')),
+                  ListTile(title: Text('Display name: ${user.displayName}')),
+                  ListTile(title: Text('Anonymous: ${user.isAnonymous}')),
+                  ListTile(title: Text('providerId: ${user.providerId}')),
+                  ListTile(title: Text('Email: ${user.email}')),
+                  ListTile(
+                    title: Text('Profile photo: '),
+                    trailing: user.photoUrl != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(user.photoUrl),
+                          )
+                        : CircleAvatar(
+                            child: Text(user.displayName[0]),
+                          ),
+                  ),
+                  /*ListTile(
+                    title: Text(
+                        'Last sign in: ${DateTime.fromMillisecondsSinceEpoch(user.metadata.lastSignInTimestamp)}'),
+                  ),
+                  ListTile(
+                    title: Text(
+                        'Creation time: ${DateTime.fromMillisecondsSinceEpoch(user.metadata.creationTimestamp)}'),
+                  ),*/
+                  ListTile(title: Text('ProviderData: ${user.providerData}')),
+                ],
+          )
+        ),
+      ),
+  );
+  }
 }

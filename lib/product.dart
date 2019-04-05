@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 //Pages
+//import './call_camera.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProductPage extends StatefulWidget {
@@ -10,9 +11,8 @@ class ProductPage extends StatefulWidget {
   _ProductPage createState() => _ProductPage();
 }
 
-class _ProductPage extends State<ProductPage> {
+class _ProductPage extends State<ProductPage>  {
   File _imageFile;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

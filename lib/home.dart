@@ -23,6 +23,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
 {
+  FirebaseUser _user;
+  final kFirebaseAuth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     
@@ -136,6 +138,10 @@ class _HomePageState extends State<HomePage>
                   );
               },
             ),
+            ListTile(
+              title: Text('log out'),
+              onTap: (){_signOut();}
+            ),
           ],
         ),
       ),
@@ -159,5 +165,10 @@ class _HomePageState extends State<HomePage>
         })
       ),
     );
+  }
+    Future<Null> _signOut() async {
+    kFirebaseAuth.signOut();
+    setState(() => this._user = null);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 }
