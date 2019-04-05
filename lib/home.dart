@@ -9,6 +9,7 @@ import './camera.dart';
 import './chat/home_page.dart';
 import './login.dart';
 import './categoria.dart';
+import './product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -110,6 +111,14 @@ class _HomePageState extends State<HomePage>
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => GetLocationPage())
+                  );
+              },
+            ),
+             ListTile(
+              title: Text('Produto'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage())
                   );
               },
             ),
