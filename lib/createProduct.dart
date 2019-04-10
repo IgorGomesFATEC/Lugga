@@ -13,7 +13,7 @@ class _CreateProductPage extends State<CreateProductPage> {
   String _title,_description,_categoriaAtual;
   String _cep = '';
   List<DropdownMenuItem<String>> _dropDownMenuItems;
-  List _categoria = ['Categorias','adada','adads','srdrtd','bbbb','pppppp'];
+  List _categoria = ['Categoria','Agro e Industria','Construção','Diversão','Eletrônicos','Ferramentas','Instrumentos', 'Livros', 'Móveis', 'Roupas e Acessórios', 'Som e Iluminação', 'Utilitários', 'Outros'];
   @override
   void initState() {
     _dropDownMenuItems = getDropDownMenuItems();

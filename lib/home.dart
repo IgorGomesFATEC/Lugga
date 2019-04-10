@@ -8,7 +8,7 @@ import './chat/home_page.dart';
 import './login.dart';
 import './categoria.dart';
 import './product.dart';
-import './criarProduto.dart';
+import './createProduct.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage>
               },
             ),
             ListTile(
-              title: Text('criar produto'),
+              title: Text('Criar produto'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => CreateProductPage())

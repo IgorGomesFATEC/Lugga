@@ -53,7 +53,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
                     });
                   });
                 },
-                color: Colors.blue,
+                color: Color.fromARGB(127, 0, 243, 255),
                 child: Text("Você está em", style: TextStyle(color: Colors.white),),
               ),
             ),
