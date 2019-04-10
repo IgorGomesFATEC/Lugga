@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-//pages
 import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
@@ -10,7 +8,6 @@ import './chat/home_page.dart';
 import './login.dart';
 import './categoria.dart';
 import './product.dart';
-import './criarProduto.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -46,20 +43,22 @@ class _HomePageState extends State<HomePage>
             ]
           )
         ),
-
+        iconTheme: new IconThemeData(color: Colors.white),
         backgroundColor: new Color.fromARGB(127, 0, 243, 255),
 
         actions: <Widget>[
           IconButton(
             tooltip: 'Categorias',
-            icon: Icon(Icons.filter_list),
+            icon: Icon(Icons.filter_list, color: Colors.white,),
             onPressed: (){Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => CategoriaPage())
                   );},
           ),
           IconButton(
-            tooltip: 'Search',
-            icon: Icon(Icons.search),
+            tooltip: 'Pesquisa',
+            icon: Icon(
+              Icons.search, color: Colors.white,
+              ),
             onPressed: () {
             },
           ),
@@ -77,12 +76,11 @@ class _HomePageState extends State<HomePage>
               blurRadius: 5.0,
                   ),
                 ],
-              ),
-              accountName: Text('Seu nome'),
-              accountEmail: Text('${widget.user.email}'),
+              ),             
+              accountName: Text('Seu nome', style: TextStyle(color: Colors.white),),
+              accountEmail: Text('${widget.user.email}', style: TextStyle(color: Colors.white),),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Account-2-512.png'),
-               //backgroundImage: Image.asset('assets/profile.png'),
+               backgroundImage: AssetImage('assets/profile.png'),
               ),
             ),
             ListTile(
@@ -149,16 +147,8 @@ class _HomePageState extends State<HomePage>
                   );
               },
             ),
-             ListTile(
-              title: Text('criar produto'),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => CreateProductPage())
-                  );
-              },
-            ),
             ListTile(
-              title: Text('log out'),
+              title: Text('Sair'),
               onTap: (){_signOut();}
             ),
           ],
@@ -168,17 +158,38 @@ class _HomePageState extends State<HomePage>
         crossAxisCount: 2,
         scrollDirection: Axis.vertical,  
         children: List.generate(50, (index){
-          return Center(
+          return Container(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2.0),
+                border: Border.all(color: Colors.grey, width: 0.15),
+              ),          
+              child: Container(
+              child: new Column(
+                children: <Widget>[
+                  new Card(
+                    child: new Column(
+                      children: <Widget>[
+                        new Image.asset('assets/example.png',fit: BoxFit.cover,),
+                        new Padding(
+                          padding: new EdgeInsets.all(10.0),
+                          child: new Row(
+                            children: <Widget>[
+                             new Padding(
+                               padding: new EdgeInsets.all(1.0),
+                               child: new Text('Nome do produto | R\$24,90',
+                               style: new TextStyle(fontSize: 12.0),
+                               maxLines: 1,
+                               overflow: TextOverflow.ellipsis),
+                             ),
+                            ],
+                          )
+                        )
+                      ],
+                    ),
+                  )
+                ],
               ),
-              padding: const EdgeInsets.all(10.0),
-              child: 
-              Text(
-                'Item $index',
-                style:Theme.of(context).textTheme.headline,
-                ),
+            )
             ),
           );
         })

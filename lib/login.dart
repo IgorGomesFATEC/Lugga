@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-//pages
 import './home.dart';
-import './teste.dart';
 import './createAccount.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +24,6 @@ class _LoginPage extends State<LoginPage> {
           (user) => setState(() => this._user = user),
         );
   }
-
 
   Widget _loginButtons()
   {
@@ -89,13 +85,14 @@ class _LoginPage extends State<LoginPage> {
                   children: <Widget>[
                     Center(
                       child: Container(
-                        padding: EdgeInsets.all(7),
+                        padding: EdgeInsets.all(6),
                         child: Image.asset('assets/googleG.png')
                       )
                     ),
                     Center(
                         child: Text('Entrar com Google',
                         style: TextStyle(
+                          fontSize: 11,
                         color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
@@ -180,8 +177,7 @@ class _LoginPage extends State<LoginPage> {
           // "Password" form.
           Container(
             padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            
+            decoration: BoxDecoration(   
           ),
             child: Column(
               children: <Widget>[
