@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:via_cep/via_cep.dart';
 
 class CreateProductPage extends StatefulWidget {
   @override
@@ -6,7 +7,11 @@ class CreateProductPage extends StatefulWidget {
 }
 
 class _CreateProductPage extends State<CreateProductPage> {
-  String _title,_description,_cep,_categoriaAtual;
+  //static var cep = new via_cep();
+  //var result = cep.searchCEP(_cep, 'json', '');
+
+  String _title,_description,_categoriaAtual;
+  String _cep = '';
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   List _categoria = ['Categorias','adada','adads','srdrtd','bbbb','pppppp'];
   @override
@@ -18,10 +23,10 @@ class _CreateProductPage extends State<CreateProductPage> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
-    for (String city in _categoria) {
+    for (String cat in _categoria) {
       items.add(new DropdownMenuItem(
-          value: city,
-          child: new Text(city)
+          value: cat,
+          child: new Text(cat)
       ));
     }
     return items;
@@ -33,7 +38,7 @@ class _CreateProductPage extends State<CreateProductPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true ,
-        title: Text("Criar Anuncio",
+        title: Text("Criar Anuncio ",//+cep.getLogradouro(),
                 style: TextStyle(
         color: Colors.white,
         shadows: <Shadow>[
@@ -45,6 +50,7 @@ class _CreateProductPage extends State<CreateProductPage> {
             ]
           )
         ),
+        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
       ),
       body: Form(
         child: Column(
@@ -54,9 +60,10 @@ class _CreateProductPage extends State<CreateProductPage> {
             children: <Widget>[
               IconButton(
               tooltip: 'Camera',
-              icon: Icon(Icons.camera_alt,color: Colors.cyan,size: 75,),
+              icon: Icon(Icons.add_a_photo,color: Colors.grey,size: 75,),
+
               onPressed: (){},
-              )
+              ),
             ],
           ),
         ),
@@ -77,7 +84,7 @@ class _CreateProductPage extends State<CreateProductPage> {
                   child:  TextFormField(
                   validator: (input){
                     if(input.length < 0){
-                      return 'Digite o titulo dp Anúncio';
+                      return 'Digite o titulo do Anúncio';
                     }
                     else if(input.length>20){
                       return 'Digite um titulo menor';
@@ -127,13 +134,13 @@ class _CreateProductPage extends State<CreateProductPage> {
                   onChanged: changedDropDownItem,
                   validator: (input){
                     if(input.length < 0){
-                      return 'Digite o titulo dp Anúncio';
+                      return 'Coloque a categoria do Anúncio';
                     }
-                    else if(input.length>20){
-                      return 'Digite um titulo menor';
+                    if(input != 'Categorias'){
+                      return 'Coloque a categoria do Anuncio';
                     }
                   },
-                  onSaved: (input)=>_title = input,
+                  onSaved: (input)=>_categoriaAtual = input,
                   decoration: InputDecoration.collapsed(
                     hintText: 'Categoria *',
                   ),                  
@@ -155,16 +162,48 @@ class _CreateProductPage extends State<CreateProductPage> {
                       return 'CEP muito longo';
                     }
                   },
-                  onSaved: (input)=>_title = input,
+                  
+  //                onSaved: (input)=>_cep = input,
                   decoration: InputDecoration.collapsed(
+                    
                     hintText: 'CEP *',
                   ),
                   cursorColor: Colors.grey,
                   autocorrect: true,
+                  onFieldSubmitted: (String value){
+                    setState(() {
+                     this._cep = value;
+                    });
+                    procuraCep(_cep);
+                  },
                   
                 ),
                 ),
               ],
+            ),
+          ),
+          
+          Container(
+            decoration: BoxDecoration(border: Border.all(color: Colors.cyan)),
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
+            
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              color: Color.fromARGB(127, 0, 243, 255),
+              shadowColor: Colors.black87,
+              elevation: 10.0,
+              child: MaterialButton(
+                onPressed: (){},
+                child: Center(
+                  child: Text('Entrar',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -177,4 +216,27 @@ class _CreateProductPage extends State<CreateProductPage> {
       _categoriaAtual = categoriaSelecionada;
     });
   }
+  Future<Null> procuraCep(String cepDigitado) async{
+    var CEP = new via_cep();
+  
+    await CEP.searchCEP(cepDigitado, 'json', ''); 
+    
+    // Sucesso
+    if (CEP.getResponse() == 200) { 
+      print('CEP: '+CEP.getCEP());
+      print('Logradouro: '+CEP.getLogradouro());
+      print('Complemento: '+CEP.getComplemento());
+      print('Bairro: '+CEP.getBairro());
+      print('Localidade: '+CEP.getLocalidade());
+      print('UF: '+CEP.getUF());
+      print('Unidade: '+CEP.getUnidade());
+      print('IBGE '+CEP.getIBGE());
+      print('GIA: '+CEP.getGIA());
+    // Falha
+    } else {
+      print('Código de Retorno: '+CEP.getResponse().toString());
+      print('Erro: '+CEP.getBody());
+    }
+  }
+  
 }
