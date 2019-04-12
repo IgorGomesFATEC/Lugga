@@ -4,7 +4,7 @@ import './profile.dart';
 import './geolocation.dart';
 import './about.dart';
 import './camera.dart';
-import './chat/home_page.dart';
+import './chat.dart';
 import './login.dart';
 import './categoria.dart';
 import './product.dart';
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage>
               title: Text('Chat'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => ChatPage())
+                  builder: (BuildContext context) => ChatScreen())
                   );
               },
             ),
