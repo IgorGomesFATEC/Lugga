@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:haversine/haversine.dart';
 
 class GetLocationPage extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class _GetLocationPageState extends State<GetLocationPage> {
   var location = new Location();
 
   Map<String, double> userLocation;
+
+  double localiza;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +40,6 @@ class _GetLocationPageState extends State<GetLocationPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            userLocation == null
-                ? CircularProgressIndicator()
-                : Text("Localização:" +
-                    userLocation["Latitude"].toString() +
-                    " " +
-                    userLocation["Longitude"].toString()),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: RaisedButton(
@@ -50,6 +47,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
                   _getLocation().then((value) {
                     setState(() {
                       userLocation = value;
+                      localizacao();
                     });
                   });
                 },
@@ -57,6 +55,12 @@ class _GetLocationPageState extends State<GetLocationPage> {
                 child: Text("Você está em", style: TextStyle(color: Colors.white),),
               ),
             ),
+                userLocation == null
+                ? CircularProgressIndicator()
+                : Text("Localização:" +
+                    userLocation["latitude"].toString() +
+                    " " +
+                    userLocation["longitude"].toString() + "\n\nKM entre eles:${localiza}")
           ],
         ),
       ),
@@ -71,5 +75,18 @@ class _GetLocationPageState extends State<GetLocationPage> {
       currentLocation = null;
     }
     return currentLocation;
+  }
+
+  void localizacao() {
+    final lat1 = userLocation["latitude"];
+    final lon1 = userLocation["longitude"];
+
+    //TODO inplementar a comparação entre KM do usuário com o produto
+    final lat2 = -20.8118; //Rio preto
+    final lon2 = -49.3762; //Rio preto
+
+    final harvesine = new Haversine.fromDegrees(latitude1: lat1, longitude1: lon1, latitude2: lat2, longitude2: lon2);
+
+    localiza = harvesine.distance()*0.001;
   }
 }

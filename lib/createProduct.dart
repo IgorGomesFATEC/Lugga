@@ -161,10 +161,8 @@ class _CreateProductPage extends State<CreateProductPage> {
                       return 'CEP muito longo';
                     }
                   },
-                  
-  //                onSaved: (input)=>_cep = input,
+                  //onSaved: (input)=>_cep = input,
                   decoration: InputDecoration.collapsed(
-                    
                     hintText: 'CEP *',
                   ),
                   cursorColor: Colors.grey,
@@ -175,7 +173,6 @@ class _CreateProductPage extends State<CreateProductPage> {
                     });
                     procuraCep(_cep);
                   },
-                  
                 ),
                 ),
               ],
@@ -186,7 +183,6 @@ class _CreateProductPage extends State<CreateProductPage> {
             decoration: BoxDecoration(border: Border.all(color: Colors.cyan)),
             margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(10),
-            
             child: Material(
               borderRadius: BorderRadius.circular(20),
               color: Color.fromARGB(127, 0, 243, 255),
@@ -237,5 +233,4 @@ class _CreateProductPage extends State<CreateProductPage> {
       print('Erro: '+CEP.getBody());
     }
   }
-  
 }
