@@ -362,7 +362,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: Text('Criar produto'),
+              title: Text('Criar anúncio'),
               onTap: () {
                 Navigator.push(
                     context,
@@ -383,7 +383,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
                 title: Text('Sair'),
                 onTap: () {
-                  openDialog();
+                  _signOut();
                 }),
           ],
         ),

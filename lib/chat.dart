@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,10 +21,12 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading;
   //variavel da imagem
   File imageFile;
-  //variavel para pegar a imagem dps de ser upada
+  //variavel para pegar a imagem depois de ser upada
   String imageUrl;
-  //variavel para
+  //variavel para mensagens
   var listMessage;
+
+  File _cameraFile;
 
   //widget do texto e dos icones para digitar
   Widget _textComposerWidget() {
@@ -39,7 +40,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.image),
                 onPressed: getImage,
-                color: Colors.cyan,
+                color: Color.fromARGB(127, 0, 243, 255),
               ),
             ),
             color: Colors.white,
@@ -48,29 +49,29 @@ class ChatScreenState extends State<ChatScreen> {
             child: new Container(
               margin: new EdgeInsets.symmetric(horizontal: 1.0),
               child: new IconButton(
-                icon: new Icon(Icons.face),
-                onPressed: () {},
-                color: Colors.cyan,
+                icon: new Icon(Icons.photo_camera),
+                onPressed: tiraFoto,
+                color: Color.fromARGB(127, 0, 243, 255),
               ),
             ),
             color: Colors.white,
           ),
-
           // Edit text
           Flexible(
             child: Container(
-              child: TextField(
-                style: TextStyle(color: Colors.cyan, fontSize: 15.0),
+              child: new TextField(
+                style: TextStyle(color: Colors.black, fontSize: 15.0),
                 controller: _textController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: Colors.blueGrey),
+                  hintText: 'Digite sua Mensagem',
+                  hintStyle: TextStyle(
+                    color: Color.fromARGB(127, 0, 243, 255),
+                  ),
                 ),
                 //focusNode: focusNode,
               ),
             ),
           ),
-
           // Button send message
           Material(
             child: new Container(
@@ -78,7 +79,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.send),
                 onPressed: () => onSendMessage(_textController.text, 0),
-                color: Colors.cyan,
+                color: Color.fromARGB(127, 0, 243, 255),
               ),
             ),
             color: Colors.white,
@@ -89,7 +90,7 @@ class ChatScreenState extends State<ChatScreen> {
       height: 50.0,
       decoration: new BoxDecoration(
           border:
-              new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
+              new Border(top: new BorderSide(color: Colors.black, width: 0.5)),
           color: Colors.white),
     );
   }
@@ -103,11 +104,11 @@ class ChatScreenState extends State<ChatScreen> {
           child: buildListMessage(),
         ),
         new Divider(
-          height: 1.0,
+          height: 10.0,
         ),
         new Container(
           decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Colors.white,
           ),
           child: _textComposerWidget(),
         ),
@@ -120,6 +121,17 @@ class ChatScreenState extends State<ChatScreen> {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
+      setState(() {
+        isLoading = true;
+      });
+      uploadFile();
+    }
+  }
+
+  Future<Null> tiraFoto() async {
+    final File cameraFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    if (cameraFile != null) {
       setState(() {
         isLoading = true;
       });
@@ -177,7 +189,7 @@ class ChatScreenState extends State<ChatScreen> {
       });*/
       //listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
-      Fluttertoast.showToast(msg: 'Nothing to send');
+      Fluttertoast.showToast(msg: 'Nada a enviar');
     }
   }
 
@@ -194,12 +206,12 @@ class ChatScreenState extends State<ChatScreen> {
             ? Container(
                 child: Text(
                   document['content'],
-                  style: TextStyle(color: Colors.cyan),
+                  style: TextStyle(color: Colors.black),
                 ),
-                padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                 width: 200.0,
                 decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(8.0)),
                 //margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
               )
@@ -209,14 +221,15 @@ class ChatScreenState extends State<ChatScreen> {
                   child: CachedNetworkImage(
                     placeholder: (context, url) => Container(
                           child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.cyan),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(127, 0, 243, 255),
+                            ),
                           ),
                           width: 200.0,
                           height: 200.0,
                           padding: EdgeInsets.all(70.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: Colors.white,
                             borderRadius: BorderRadius.all(
                               Radius.circular(8.0),
                             ),
@@ -224,7 +237,7 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                     errorWidget: (context, url, error) => Material(
                           child: Image.asset(
-                            'images/img_not_available.jpeg',
+                            'images/img_nao_disp.png',
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,
@@ -367,7 +380,9 @@ class ChatScreenState extends State<ChatScreen> {
           ? Container(
               child: Center(
                 child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan)),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                  Color.fromARGB(127, 0, 243, 255),
+                )),
               ),
               color: Colors.white.withOpacity(0.8),
             )
@@ -388,7 +403,7 @@ class ChatScreenState extends State<ChatScreen> {
           //.document(groupChatId)
           //.collection(groupChatId)
           .orderBy('timestamp', descending: true)
-          .limit(20)
+          .limit(800)
           .snapshots(),
       //montando o envio de mensagem
       builder: (context, snapshot) {
@@ -396,12 +411,14 @@ class ChatScreenState extends State<ChatScreen> {
         if (!snapshot.hasData) {
           return Center(
               child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan)));
+                  valueColor: AlwaysStoppedAnimation<Color>(
+            Color.fromARGB(127, 0, 243, 255),
+          )));
         } else {
           //se nao vai montar uma listView e chamar o build item
           listMessage = snapshot.data.documents;
           return ListView.builder(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(15.0),
             itemBuilder: (context, index) =>
                 buildItem(index, snapshot.data.documents[index]),
             itemCount: snapshot.data.documents.length,

@@ -318,7 +318,7 @@ class _LoginPage extends State<LoginPage> {
                       color: Colors.black.withOpacity(0.5),
                     )
                   : Container(),
-            ), 
+            ),  
         ],
       ),
     );
