@@ -10,6 +10,7 @@ import io.flutter.plugins.googlesignin.GoogleSignInPlugin;
 import io.flutter.plugins.imagepicker.ImagePickerPlugin;
 import com.lyokone.location.LocationPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 import com.tekartik.sqflite.SqflitePlugin;
 
 /**
@@ -29,6 +30,7 @@ public final class GeneratedPluginRegistrant {
     ImagePickerPlugin.registerWith(registry.registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"));
     LocationPlugin.registerWith(registry.registrarFor("com.lyokone.location.LocationPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
+    SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
     SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));
   }
 

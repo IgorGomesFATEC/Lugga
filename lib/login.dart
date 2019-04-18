@@ -1,64 +1,97 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
 import './createAccount.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPage createState() => new _LoginPage(); 
+  _LoginPage createState() => new _LoginPage();
 }
+/**
+**Foi feito a localização por parte do login
+*TODO:começar a mexer com a parte de cadastro
+*!nao mexer com o produto antes do cadastro
+*TODO:Fazer Merge com o pedro
+**Patametros mudados de $user para $currentuserid 
+*/
 
 class _LoginPage extends State<LoginPage> {
-  bool _obscureText = true,_busy =false;
-  String _email,_password;
+  bool _obscureText = true;
+  String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final kGoogleSignIn = GoogleSignIn();
-  final kFirebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn kGoogleSignIn = GoogleSignIn();
+  final FirebaseAuth kFirebaseAuth = FirebaseAuth.instance;
+  SharedPreferences prefs;
   FirebaseUser _user;
+  bool isLoading = false;
+  bool isLoggedIn = false;
 
-   @override
+  @override
   void initState() {
     super.initState();
-    kFirebaseAuth.currentUser().then(
-          (user) => setState(() => this._user = user),
-        );
+    isSignedIn();
   }
 
-  Widget _loginButtons()
-  {
+  void isSignedIn() async {
+    this.setState(() {
+      isLoading = true;
+    });
+
+    prefs = await SharedPreferences.getInstance();
+
+    isLoggedIn = await kGoogleSignIn.isSignedIn();
+    if (isLoggedIn == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                HomePage(currentUserId: prefs.getString('id-usuario'))),
+      );
+    }
+
+    this.setState(() {
+      isLoading = false;
+    });
+  }
+
+  Widget _loginButtons() {
     return Container(
-      padding:EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
       child: Row(
         children: <Widget>[
-        Expanded(
-          child:Container(
-            height: 40,
-            width: 170,
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              shadowColor: Colors.black87,
-              elevation: 10.0,
-              child: MaterialButton(
-                onPressed: _Login,
-                child: Center(
-                  child: Text('Entrar',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
-                  ),
+          Expanded(
+            child: Container(
+              height: 40,
+              width: 170,
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Material(
+                borderRadius: BorderRadius.circular(20),
+                shadowColor: Colors.black87,
+                elevation: 10.0,
+                child: MaterialButton(
+                  onPressed: _login,
+                  child: Center(
+                    child: Text(
+                      'Entrar',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-           Container(
+          Container(
             height: 40,
             width: 172,
             margin: EdgeInsets.all(2),
@@ -72,30 +105,21 @@ class _LoginPage extends State<LoginPage> {
               //color: Colors.red,
               elevation: 10.0,
               child: MaterialButton(
-                onPressed: this._busy
-                ? null
-                : () async {
-                  setState(() => this._busy = true);
-                  final user = await this._googleSignIn();
-                  this._showUserProfilePage(user);
-                  setState(() => this._busy = false);
-            },
+                onPressed: _googleSignIn,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                      child: Container(
-                        padding: EdgeInsets.all(6),
-                        child: Image.asset('assets/googleG.png')
-                      )
-                    ),
+                        child: Container(
+                            padding: EdgeInsets.all(6),
+                            child: Image.asset('assets/googleG.png'))),
                     Center(
-                        child: Text('Entrar com Google',
+                      child: Text(
+                        'Entrar com Google',
                         style: TextStyle(
-                          fontSize: 11,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 11,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
@@ -103,256 +127,289 @@ class _LoginPage extends State<LoginPage> {
               ),
             ),
           ),
-      ],
+        ],
       ),
     );
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(   
+    return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: new Color.fromARGB(210, 0, 243, 255),
-        body: Form(
-          key: _formKey,
-          child: Center( 
-          child: Container(
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text
-              (
-                'Lugga',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 45,
-                  shadows: <Shadow>[
-                  Shadow(
-                  offset: Offset(2.0, 2.0),
-                  blurRadius: 8.0,
-                  color: Colors.black54
-                )
-            ]
-                  )
-              ),
-          SizedBox(height: 24.0),
-          // "Email" form.
-          Container(
-            padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(),
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  validator: (input){
-                    if(input.length<1){
-                      return 'Digite um e-mail!';
-                    }
-                  },
-                  onSaved: (input)=> _email =input,
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  ),
-                  hintText: 'Digite seu email',
-                  hintStyle: TextStyle(color: Colors.white),
-                  suffixIcon: GestureDetector(
-                    onTap: (){ },
-                    child: IconTheme(
-                      data: IconThemeData(
-                        color: Colors.white,
+      body: Stack(
+        children: <Widget>[
+          Form(
+            key: _formKey,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Lugga',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 45,
+                            shadows: <Shadow>[
+                              Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 8.0,
+                                  color: Colors.black54)
+                            ])),
+                    SizedBox(height: 24.0),
+                    // "Email" form.
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            validator: (input) {
+                              if (input.length < 1) {
+                                return 'Digite um e-mail!';
+                              }
+                            },
+                            onSaved: (input) => _email = input,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              hintText: 'Digite seu email',
+                              hintStyle: TextStyle(color: Colors.white),
+                              suffixIcon: GestureDetector(
+                                  onTap: () {},
+                                  child: IconTheme(
+                                    data: IconThemeData(
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(Icons.alternate_email),
+                                  )),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                color: Color.fromARGB(100, 0, 243, 255),
+                              )),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Icon(Icons.alternate_email),
-                    )
-                  ),
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
-            ),
-          ),
-              ],
-            ),
-          ),
-          SizedBox(height: 30.0),
-          // "Password" form.
-          Container(
-            padding:EdgeInsets.all(10),
-            decoration: BoxDecoration(   
-          ),
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  validator: (input){
-                    if(input.length<1){
-                      return 'Digite uma senha!';
-                    }
-                  },
-                  style: TextStyle(color: Colors.white),
-                  onSaved: (input)=>_password =input,
-                  obscureText: _obscureText,
-                  decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  ),
-                  hintText: 'Digite sua senha',
-                  hintStyle: TextStyle(color: Colors.white),
-                  suffixIcon: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                       _obscureText = !_obscureText; 
-                      });
-                    },
-                    child: IconTheme(
-                      data: IconThemeData(
-                        color: Colors.white,
+                    ),
+                    SizedBox(height: 30.0),
+                    // "Password" form.
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            validator: (input) {
+                              if (input.length < 1) {
+                                return 'Digite uma senha!';
+                              }
+                            },
+                            style: TextStyle(color: Colors.white),
+                            onSaved: (input) => _password = input,
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              hintText: 'Digite sua senha',
+                              hintStyle: TextStyle(color: Colors.white),
+                              suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                  child: IconTheme(
+                                    data: IconThemeData(
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                  )),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                color: Color.fromARGB(100, 0, 243, 255),
+                              )),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Icon(_obscureText ? Icons.visibility:Icons.visibility_off),
+                    ),
+                    SizedBox(height: 20.0),
+                    _loginButtons(),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'OU',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 40,
+                      width: 170,
+                      margin: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(20),
+                        shadowColor: Colors.black87,
+                        //color: Colors.red,
+                        elevation: 10.0,
+                        child: MaterialButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CreateAccountPage()));
+                          },
+                          child: Center(
+                            child: Text(
+                              'Criar uma conta',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+           Positioned(
+              child: isLoading
+                  ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        ),
+                      ),
+                      color: Colors.black.withOpacity(0.5),
                     )
-                  ),
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(100, 0, 243, 255),)),
-            ),
-          ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.0),
-          _loginButtons(),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  child: Divider(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Text(
-                'OU',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-              Expanded(
-                child:Container(
-                  margin: EdgeInsets.all(10),
-                  child: Divider(
-                    color: Colors.white,
-                  ),
-                ) ,
-                ),
-            ],
-          ),
-           Container(
-            height: 40,
-            width: 170,
-            margin: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              shadowColor: Colors.black87,
-              //color: Colors.red,
-              elevation: 10.0,
-              child: MaterialButton(
-                onPressed: (){
-                   Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => CreateAccountPage())
-                  );
-                },
-                child: Center(
-                  child: Text('Criar uma conta',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
-                  ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+                  : Container(),
+            ), 
         ],
-            ),      
-          ),
-        ) ,
-        ),
-      );
+      ),
+    );
   }
-    Future<void> _Login() async {
+
+  Future<void> _login() async {
     final formState = _formKey.currentState;
-    if(formState.validate()==true){
+    if (formState.validate() == true) {
       formState.save();
       try {
-        _user =await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email ,password:_password);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: _user,)));
+        _user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(currentUserId: prefs.getString('id-usuario'))));
       } catch (e) {
         print(e.message);
       }
-      }
-      else{
-        print(formState);
-      }
+    } else {
+      print(formState);
     }
+  }
 
-      // Sign in with Google.
-    Future<FirebaseUser> _googleSignIn() async {
-      final curUser = this._user ?? await kFirebaseAuth.currentUser();
-      if (curUser != null && !curUser.isAnonymous) {
-        return curUser;
+  // Sign in with Google.
+  Future<void> _googleSignIn() async {
+    prefs = await SharedPreferences.getInstance();
+
+    this.setState(() {
+      isLoading = true;
+    });
+
+    GoogleSignInAccount googleUser = await kGoogleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    FirebaseUser firebaseUser =
+        await kFirebaseAuth.signInWithCredential(credential);
+
+    if (firebaseUser != null) {
+      // Check is already sign up
+      final QuerySnapshot result = await Firestore.instance
+          .collection('users')
+          .where('id', isEqualTo: firebaseUser.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      if (documents.length == 0) {
+        // Update data to server if new user
+        Firestore.instance
+            .collection('users')
+            .document(firebaseUser.uid)
+            .setData({
+          'nome': firebaseUser.displayName,
+          'foto-url': firebaseUser.photoUrl,
+          'id-usuario': firebaseUser.uid,
+          'email': firebaseUser.email
+        });
+
+        // Write data to local
+        _user = firebaseUser;
+        await prefs.setString('id-usuario', _user.uid);
+        await prefs.setString('nome', _user.displayName);
+        await prefs.setString('foto-url', _user.photoUrl);
+        await prefs.setString('email', _user.email);
+      } else {
+        // Write data to local
+        await prefs.setString('id-usuario', documents[0]['id-usuario']);
+        await prefs.setString('nome', documents[0]['nome']);
+        await prefs.setString('foto-url', documents[0]['foto-url']);
+        await prefs.setString('email', documents[0]['email']);
       }
-      final googleUser = await kGoogleSignIn.signIn();
-      final googleAuth = await googleUser.authentication;
-      // Note: user.providerData[0].photoUrl == googleUser.photoUrl.
-      final user = await kFirebaseAuth.signInWithGoogle(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-     // kFirebaseAnalytics.logLogin();
-      setState(() => this._user = user);
-      return user;
-    }
+      Fluttertoast.showToast(msg: "Sign in success");
+      this.setState(() {
+        isLoading = false;
+      });
 
-      // Show user's profile in a new screen.
-  void _showUserProfilePage(FirebaseUser user) {
-     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) =>Scaffold(
-              appBar: AppBar(
-                title: Text('user profile'),
-              ),
-              body: ListView(
-                children: <Widget>[
-                  ListTile(title: Text('User id: ${user.uid}')),
-                  ListTile(title: Text('Display name: ${user.displayName}')),
-                  ListTile(title: Text('Anonymous: ${user.isAnonymous}')),
-                  ListTile(title: Text('providerId: ${user.providerId}')),
-                  ListTile(title: Text('Email: ${user.email}')),
-                  ListTile(
-                    title: Text('Profile photo: '),
-                    trailing: user.photoUrl != null
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoUrl),
-                          )
-                        : CircleAvatar(
-                            child: Text(user.displayName[0]),
-                          ),
-                  ),
-                  /*ListTile(
-                    title: Text(
-                        'Last sign in: ${DateTime.fromMillisecondsSinceEpoch(user.metadata.lastSignInTimestamp)}'),
-                  ),
-                  ListTile(
-                    title: Text(
-                        'Creation time: ${DateTime.fromMillisecondsSinceEpoch(user.metadata.creationTimestamp)}'),
-                  ),*/
-                  ListTile(title: Text('ProviderData: ${user.providerData}')),
-                ],
-          )
-        ),
-      ),
-  );
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage(currentUserId: prefs.getString('id-usuario'))));
+    } else {
+      Fluttertoast.showToast(msg: "Sign in fail");
+      this.setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
