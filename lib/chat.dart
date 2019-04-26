@@ -26,8 +26,6 @@ class ChatScreenState extends State<ChatScreen> {
   //variavel para mensagens
   var listMessage;
 
-  File _cameraFile;
-
   //widget do texto e dos icones para digitar
   Widget _textComposerWidget() {
     return Container(
@@ -128,10 +126,10 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<Null> tiraFoto() async {
-    final File cameraFile = await ImagePicker.pickImage(source: ImageSource.camera);
+  Future tiraFoto() async {
+    imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
 
-    if (cameraFile != null) {
+    if (imageFile != null) {
       setState(() {
         isLoading = true;
       });

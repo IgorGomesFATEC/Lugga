@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
     this.setState(() {
       isLoading = false;
     });
+    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO: $latitude $longitude');
     print('LOCALIZAÇÃO: $latitude $longitude');
     setState(() {});
   }
@@ -291,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white),
               ),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: foto == null
+                backgroundImage: foto == null || foto == ''
                     ? AssetImage('assets/profile.png')
                     : NetworkImage(foto),
               ),

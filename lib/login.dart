@@ -15,11 +15,13 @@ class LoginPage extends StatefulWidget {
 }
 /**
 **Foi feito a localização por parte do login
-*TODO:começar a mexer com a parte de cadastro
+**começar a mexer com a parte de cadastro
 *!nao mexer com o produto antes do cadastro
-*TODO:Fazer Merge com o pedro
+*TODO:login automatico com firebase auth
+**fazer login apos de cadastrar
+**Fazer Merge com o pedro
 **Patametros mudados de $user para $currentuserid 
-*/
+**/
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;
@@ -30,7 +32,7 @@ class _LoginPage extends State<LoginPage> {
   SharedPreferences prefs;
   FirebaseUser _user;
   bool isLoading = false;
-  bool isLoggedIn = false;
+  bool googleLogin = false, fireLogin = false;
 
   @override
   void initState() {
@@ -45,8 +47,17 @@ class _LoginPage extends State<LoginPage> {
 
     prefs = await SharedPreferences.getInstance();
 
-    isLoggedIn = await kGoogleSignIn.isSignedIn();
-    if (isLoggedIn == true) {
+    googleLogin = await kGoogleSignIn.isSignedIn();
+    _user = await kFirebaseAuth.currentUser();
+    if (googleLogin == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                HomePage(currentUserId: prefs.getString('id-usuario'))),
+      );
+    }
+    if (_user != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -59,6 +70,8 @@ class _LoginPage extends State<LoginPage> {
       isLoading = false;
     });
   }
+
+  
 
   Widget _loginButtons() {
     return Container(
@@ -166,7 +179,7 @@ class _LoginPage extends State<LoginPage> {
                         children: <Widget>[
                           TextFormField(
                             validator: (input) {
-                              if (input.length < 1) {
+                              if (input.isEmpty) {
                                 return 'Digite um e-mail!';
                               }
                             },
@@ -205,7 +218,7 @@ class _LoginPage extends State<LoginPage> {
                         children: <Widget>[
                           TextFormField(
                             validator: (input) {
-                              if (input.length < 1) {
+                              if (input.isEmpty) {
                                 return 'Digite uma senha!';
                               }
                             },
@@ -241,7 +254,22 @@ class _LoginPage extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    //SizedBox(height: 5.0),
+                    Container(
+                      alignment: Alignment(1, 0),
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: InkWell(
+                        onTap: (){},
+                        splashColor: Colors.cyan,
+                        child: Text('Esqueci minha senha',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                decoration: TextDecoration.underline)),
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
                     _loginButtons(),
                     Row(
                       children: <Widget>[
@@ -307,109 +335,219 @@ class _LoginPage extends State<LoginPage> {
               ),
             ),
           ),
-           Positioned(
-              child: isLoading
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
-                        ),
+          Positioned(
+            child: isLoading
+                ? Container(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
                       ),
-                      color: Colors.black.withOpacity(0.5),
-                    )
-                  : Container(),
-            ),  
+                    ),
+                    color: Colors.black.withOpacity(0.5),
+                  )
+                : Container(),
+          ),
         ],
       ),
     );
   }
 
   Future<void> _login() async {
+    prefs = await SharedPreferences.getInstance();
+    this.setState(() {
+      isLoading = true;
+    });
     final formState = _formKey.currentState;
     if (formState.validate() == true) {
       formState.save();
       try {
         _user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    HomePage(currentUserId: prefs.getString('id-usuario'))));
+        if (_user != null) {
+          final QuerySnapshot result = await Firestore.instance
+              .collection('users')
+              .where('id', isEqualTo: _user.uid)
+              .getDocuments();
+          final List<DocumentSnapshot> documents = result.documents;
+          if (documents.length != 0) {
+            await prefs.setString('id-usuario', documents[0]['id-usuario']);
+            await prefs.setString('nome', documents[0]['nome']);
+            await prefs.setString('foto-url', documents[0]['foto-url']);
+            await prefs.setString('email', documents[0]['email']);
+          } else {
+            Fluttertoast.showToast(msg: 'Usuario nao existente');
+            this.setState(() {
+              isLoading = false;
+            });
+          }
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      HomePage(currentUserId: prefs.getString('id-usuario'))));
+        } else {
+          Fluttertoast.showToast(msg: 'Usuario nulo');
+          this.setState(() {
+            isLoading = false;
+          });
+        }
       } catch (e) {
-        print(e.message);
+        Fluttertoast.showToast(msg: e.code);
+        this.setState(() {
+          isLoading = false;
+        });
       }
     } else {
-      print(formState);
+      Fluttertoast.showToast(msg: formState.toString());
+      this.setState(() {
+        isLoading = false;
+      });
     }
   }
 
   // Sign in with Google.
   Future<void> _googleSignIn() async {
     prefs = await SharedPreferences.getInstance();
+    GoogleSignInAccount googleUser;
 
     this.setState(() {
       isLoading = true;
     });
+    try {
+      googleUser = await kGoogleSignIn.signIn();
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    GoogleSignInAccount googleUser = await kGoogleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      FirebaseUser firebaseUser =
+          await kFirebaseAuth.signInWithCredential(credential);
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    FirebaseUser firebaseUser =
-        await kFirebaseAuth.signInWithCredential(credential);
-
-    if (firebaseUser != null) {
-      // Check is already sign up
-      final QuerySnapshot result = await Firestore.instance
-          .collection('users')
-          .where('id', isEqualTo: firebaseUser.uid)
-          .getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-      if (documents.length == 0) {
-        // Update data to server if new user
-        Firestore.instance
+      if (firebaseUser != null) {
+        // Check is already sign up
+        final QuerySnapshot result = await Firestore.instance
             .collection('users')
-            .document(firebaseUser.uid)
-            .setData({
-          'nome': firebaseUser.displayName,
-          'foto-url': firebaseUser.photoUrl,
-          'id-usuario': firebaseUser.uid,
-          'email': firebaseUser.email
+            .where('id', isEqualTo: firebaseUser.uid)
+            .getDocuments();
+        final List<DocumentSnapshot> documents = result.documents;
+        if (documents.length == 0) {
+          // Update data to server if new user
+          Firestore.instance
+              .collection('users')
+              .document(firebaseUser.uid)
+              .setData({
+            'nome': firebaseUser.displayName,
+            'foto-url': firebaseUser.photoUrl,
+            'id-usuario': firebaseUser.uid,
+            'email': firebaseUser.email
+          });
+
+          // Write data to local
+          _user = firebaseUser;
+          await prefs.setString('id-usuario', _user.uid);
+          await prefs.setString('nome', _user.displayName);
+          await prefs.setString('foto-url', _user.photoUrl);
+          await prefs.setString('email', _user.email);
+        } else {
+          // Write data to local
+          await prefs.setString('id-usuario', documents[0]['id-usuario']);
+          await prefs.setString('nome', documents[0]['nome']);
+          await prefs.setString('foto-url', documents[0]['foto-url']);
+          await prefs.setString('email', documents[0]['email']);
+        }
+        Fluttertoast.showToast(msg: "Sign in success");
+        this.setState(() {
+          isLoading = false;
         });
 
-        // Write data to local
-        _user = firebaseUser;
-        await prefs.setString('id-usuario', _user.uid);
-        await prefs.setString('nome', _user.displayName);
-        await prefs.setString('foto-url', _user.photoUrl);
-        await prefs.setString('email', _user.email);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(currentUserId: prefs.getString('id-usuario'))));
       } else {
-        // Write data to local
-        await prefs.setString('id-usuario', documents[0]['id-usuario']);
-        await prefs.setString('nome', documents[0]['nome']);
-        await prefs.setString('foto-url', documents[0]['foto-url']);
-        await prefs.setString('email', documents[0]['email']);
+        Fluttertoast.showToast(msg: "Sign in fail");
+        this.setState(() {
+          isLoading = false;
+        });
       }
-      Fluttertoast.showToast(msg: "Sign in success");
+    } catch (e) {
       this.setState(() {
         isLoading = false;
       });
-
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomePage(currentUserId: prefs.getString('id-usuario'))));
-    } else {
-      Fluttertoast.showToast(msg: "Sign in fail");
-      this.setState(() {
-        isLoading = false;
-      });
+      print(e.toString());
+      Fluttertoast.showToast(
+          msg: '${e.toString()}',
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
     }
   }
+
+  Future verificaEsqSenha(String email) async{
+    final QuerySnapshot result = await Firestore.instance
+                                    .collection('users')
+                                    .where('email', isEqualTo: email)
+                                    .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    return documents;
+  }
+  /* showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context){
+                            
+                            return Container(
+                              
+                              decoration: BoxDecoration(border: Border.all(color: Colors.cyan)),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            validator: (input) {
+                              List<DocumentSnapshot> documents;
+                              verificaEsqSenha(input).then((val){
+                                setState(() {
+                                  documents = val;
+                                });
+                              });                              
+                              if (input.isEmpty) {
+                                return 'Digite um e-mail!';
+                              }else if(documents.length ==0){
+                                return 'Email nao existe';
+                              }
+                            },
+                            onSaved: (input) => _email = input,
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              hintText: 'Digite seu email',
+                              hintStyle: TextStyle(color: Colors.white),
+                              suffixIcon: GestureDetector(
+                                  onTap: () {},
+                                  child: IconTheme(
+                                    data: IconThemeData(
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(Icons.alternate_email),
+                                  )),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                color: Color.fromARGB(100, 0, 243, 255),
+                              )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                                  MaterialButton(),
+                                ],
+                              ),
+                            );
+                          } */
 }
