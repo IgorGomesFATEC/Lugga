@@ -25,8 +25,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;
-  String _email, _password;
+  String _email, _password,_recovery;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   final GoogleSignIn kGoogleSignIn = GoogleSignIn();
   final FirebaseAuth kFirebaseAuth = FirebaseAuth.instance;
   SharedPreferences prefs;
@@ -70,8 +71,6 @@ class _LoginPage extends State<LoginPage> {
       isLoading = false;
     });
   }
-
-  
 
   Widget _loginButtons() {
     return Container(
@@ -256,15 +255,108 @@ class _LoginPage extends State<LoginPage> {
                     ),
                     //SizedBox(height: 5.0),
                     Container(
-                      alignment: Alignment(1, 0),
                       padding: EdgeInsets.only(top: 2.0),
                       child: InkWell(
-                        onTap: (){},
+                        onTap: () => showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Form(
+                                    key: _formKey2,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                    child: TextFormField(
+                                      validator: (input) {
+                                        //List<DocumentSnapshot> documents;
+                                        //verificaEsqSenha(input).then((val) {
+                                          //setState(() {
+                                            //documents = val;
+                                          //});
+                                        //});
+                                        if (input.isEmpty) {
+                                          return 'Digite um e-mail!';
+                                        } //else if (documents.length == 0) {
+                                          //return 'Email nao existe';
+                                        //}
+                                      },
+                                      onSaved: (input) => _recovery = input,
+                                      style: TextStyle(color: Colors.black),
+                                      decoration: InputDecoration(
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.cyan),
+                                        ),
+                                        hintText: 'Digite seu email',
+                                        hintStyle:
+                                            TextStyle(color: Colors.black),
+                                        suffixIcon: GestureDetector(
+                                            onTap: () {},
+                                            child: IconTheme(
+                                              data: IconThemeData(
+                                                color: Colors.black,
+                                              ),
+                                              child:
+                                                  Icon(Icons.email),
+                                            )),
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.black,
+                                        )),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,),
+                                  Container(
+                                    height: 40,
+                                    width: 172,
+                                    margin: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(20),
+                                      shadowColor: Colors.black87,
+                                      //color: Colors.red,
+                                      elevation: 10.0,
+                                      child: MaterialButton(
+                                        onPressed: enviarEmail,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                        
+                                            Center(
+                                              child: Text(
+                                                'Enviar Email',
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                      ],
+                                    ),
+                                  )
+                                  
+                                ],
+                              );
+                            }),
                         splashColor: Colors.cyan,
                         child: Text('Esqueci minha senha',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                //fontWeight: FontWeight.bold,
                                 fontSize: 15,
                                 decoration: TextDecoration.underline)),
                       ),
@@ -366,7 +458,7 @@ class _LoginPage extends State<LoginPage> {
         if (_user != null) {
           final QuerySnapshot result = await Firestore.instance
               .collection('users')
-              .where('id', isEqualTo: _user.uid)
+              .where('id-usuario', isEqualTo: _user.uid)
               .getDocuments();
           final List<DocumentSnapshot> documents = result.documents;
           if (documents.length != 0) {
@@ -428,7 +520,7 @@ class _LoginPage extends State<LoginPage> {
         // Check is already sign up
         final QuerySnapshot result = await Firestore.instance
             .collection('users')
-            .where('id', isEqualTo: firebaseUser.uid)
+            .where('id-usuario', isEqualTo: firebaseUser.uid)
             .getDocuments();
         final List<DocumentSnapshot> documents = result.documents;
         if (documents.length == 0) {
@@ -484,13 +576,32 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  Future verificaEsqSenha(String email) async{
+  Future <List<DocumentSnapshot>> verificaEsqSenha(String email) async {
     final QuerySnapshot result = await Firestore.instance
-                                    .collection('users')
-                                    .where('email', isEqualTo: email)
-                                    .getDocuments();
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     return documents;
+  }
+
+  Future <void> enviarEmail() async {
+    var auth = FirebaseAuth.instance;
+    final formState = _formKey2.currentState;
+    if (formState.validate() == true) {
+      formState.save();
+      try{
+        auth.sendPasswordResetEmail(email: _recovery,);
+        Fluttertoast.showToast(msg: 'foi caraio');
+        print('foi');
+      }catch(e){
+        Fluttertoast.showToast(msg:e.toString());
+      }
+      
+    }
+    else{
+      print('nao foi');
+    }
   }
   /* showModalBottomSheet(
                           context: context,
