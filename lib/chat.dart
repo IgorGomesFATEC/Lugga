@@ -235,7 +235,7 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                     errorWidget: (context, url, error) => Material(
                           child: Image.asset(
-                            'images/img_nao_disp.png',
+                            'assets/img_nao_disp.png',
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,

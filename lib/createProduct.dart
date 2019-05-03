@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 //import 'package:via_cep/via_cep.dart';
 
@@ -14,12 +18,23 @@ class _CreateProductPage extends State<CreateProductPage> {
   //var result = cep.searchCEP(_cep, 'json', '');
   bool isLoading;
   SharedPreferences prefs;
-  String _title, _description, _categoriaAtual, _latitude, _longitude,_preco;
+  String _title,
+      _description,
+      _categoriaAtual,
+      _periodoAtual,
+      _latitude,
+      _longitude,
+      _preco;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var location = Location();
   Map<String, double> userLocation;
   TextEditingController latitudeCtrl = TextEditingController();
   TextEditingController longitudeCtrl = TextEditingController();
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  List<String> _photos = [];
+  List images;
+  File imageFile;
+  List<DropdownMenuItem<String>> _dropDownMenuItemsCAT;
+  List<DropdownMenuItem<String>> _dropDownMenuItemsPER;
   List _categoria = [
     'Categoria',
     'Agro e Industria',
@@ -35,10 +50,14 @@ class _CreateProductPage extends State<CreateProductPage> {
     'Utilitários',
     'Outros'
   ];
+  List _periodo = ['Diário', 'Semanal', 'Mensal'];
+
   @override
   void initState() {
-    _dropDownMenuItems = getDropDownMenuItems();
-    _categoriaAtual = _dropDownMenuItems[0].value;
+    _dropDownMenuItemsCAT = getDropDownMenuItemsCAT();
+    _categoriaAtual = _dropDownMenuItemsCAT[0].value;
+    _dropDownMenuItemsPER = getDropDownMenuItemsPER();
+    _periodoAtual = _dropDownMenuItemsPER[0].value;
     getLocation();
     super.initState();
   }
@@ -63,12 +82,96 @@ class _CreateProductPage extends State<CreateProductPage> {
     });
   }
 
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+  List<DropdownMenuItem<String>> getDropDownMenuItemsCAT() {
     List<DropdownMenuItem<String>> items = new List();
     for (String cat in _categoria) {
       items.add(new DropdownMenuItem(value: cat, child: new Text(cat)));
     }
     return items;
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItemsPER() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String per in _periodo) {
+      items.add(new DropdownMenuItem(value: per, child: new Text(per)));
+    }
+    return items;
+  }
+
+  Future getImage() async {
+    imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    if (imageFile != null) {
+      setState(() {
+        isLoading = true;
+      });
+      uploadFile();
+    }
+  }
+
+  Future uploadFile() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(imageFile);
+    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    storageTaskSnapshot.ref.getDownloadURL().then(
+      (downloadUrl) {
+        _photos.add(downloadUrl);
+        for (var i = 0; i < _photos.length; i++) {
+          print('array: ' + _photos[i]);
+          images = List.generate(_photos.length, (x) => imageAtual(_photos[i]));
+        }
+        setState(() {
+          isLoading = false;
+          //onSendMessage(imageUrl, 1);
+        });
+      },
+    );
+    setState(() {
+      isLoading = false;
+      //onSendMessage(imageUrl, 1);
+    });
+  }
+
+  Widget imageAtual(String url) {
+    return Container(
+      child: Material(
+        child: CachedNetworkImage(
+          imageUrl: url,
+          width: 110.0,
+          height: 110.0,
+          fit: BoxFit.contain,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        clipBehavior: Clip.hardEdge,
+      ),
+      //margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+    );
+  }
+
+//!
+  Widget _buildProductItem(BuildContext context, int index) {
+    return Image.network(
+      images[0],
+      width: 110.0,
+      height: 110.0,
+      fit: BoxFit.contain,
+    );
+  }
+
+  Widget _arrayPhotos(String url) {
+    return Container(
+      child: Material(
+        child: CachedNetworkImage(
+          imageUrl: url,
+          width: 110.0,
+          height: 110.0,
+          fit: BoxFit.contain,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        clipBehavior: Clip.hardEdge,
+      ),
+    );
   }
 
   @override
@@ -103,11 +206,17 @@ class _CreateProductPage extends State<CreateProductPage> {
           ListView(
             children: <Widget>[
               Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     Container(
                       child: Row(
                         children: <Widget>[
+                          _photos.length == 0
+                              ? Container()
+                              : _arrayPhotos(_photos[_photos.length - 1]),
+
+                          //Text('${_photos}'),
                           IconButton(
                             tooltip: 'Camera',
                             icon: Icon(
@@ -115,7 +224,7 @@ class _CreateProductPage extends State<CreateProductPage> {
                               color: Colors.grey,
                               size: 75,
                             ),
-                            onPressed: () {},
+                            onPressed: getImage,
                           ),
                         ],
                       ),
@@ -126,14 +235,13 @@ class _CreateProductPage extends State<CreateProductPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 5, 10),
                       margin: EdgeInsets.all(10),
-                      decoration:
-                          BoxDecoration(border: Border.all(color: Colors.red)),
                       child: Column(
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(10)),
+                                border: Border(
+                                    bottom:
+                                        BorderSide(style: BorderStyle.solid))),
                             padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             margin: EdgeInsets.all(10),
                             child: TextFormField(
@@ -154,8 +262,9 @@ class _CreateProductPage extends State<CreateProductPage> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(10)),
+                                border: Border(
+                                    bottom:
+                                        BorderSide(style: BorderStyle.solid))),
                             padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             margin: EdgeInsets.all(10),
                             child: TextFormField(
@@ -175,14 +284,15 @@ class _CreateProductPage extends State<CreateProductPage> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(10)),
+                                border: Border(
+                                    bottom:
+                                        BorderSide(style: BorderStyle.solid))),
                             padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             margin: EdgeInsets.all(10),
                             child: DropdownButtonFormField(
                               value: _categoriaAtual,
-                              items: _dropDownMenuItems,
-                              onChanged: changedDropDownItem,
+                              items: _dropDownMenuItemsCAT,
+                              onChanged: changedDropDownItemCAT,
                               validator: (input) {
                                 if (input.toString().isEmpty) {
                                   return 'Coloque a categoria do Anúncio';
@@ -283,21 +393,23 @@ class _CreateProductPage extends State<CreateProductPage> {
                               ),
                             ],
                           ),
-                          Container(
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
                                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   child: TextFormField(
-                                    keyboardType: TextInputType.numberWithOptions(),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(),
                                     validator: (input) {
                                       if (input.isEmpty) {
                                         return 'Digite o Preço';
                                       }
                                     },
                                     onSaved: (input) => _preco = input,
-                                    
                                     style: TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
-                                      hintText:
-                                          'Preço (dia)*',
+                                      hintText: 'Preço (dia)*',
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.cyan),
@@ -322,6 +434,36 @@ class _CreateProductPage extends State<CreateProductPage> {
                                     ),
                                   ),
                                 ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              style: BorderStyle.solid))),
+                                  padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
+                                  margin: EdgeInsets.all(10),
+                                  child: DropdownButtonFormField(
+                                    value: _periodoAtual,
+                                    items: _dropDownMenuItemsPER,
+                                    onChanged: changedDropDownItemPER,
+                                    validator: (input) {
+                                      if (input.toString().isEmpty) {
+                                        return 'Coloque a categoria do Anúncio';
+                                      }
+                                      if (input != 'Categorias') {
+                                        return 'Coloque a categoria do Anuncio';
+                                      }
+                                    },
+                                    onSaved: (input) => _periodoAtual = input,
+                                    decoration: InputDecoration.collapsed(
+                                      hintText: 'Categoria *',
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -347,9 +489,15 @@ class _CreateProductPage extends State<CreateProductPage> {
     );
   }
 
-  void changedDropDownItem(String categoriaSelecionada) {
+  void changedDropDownItemCAT(String categoriaSelecionada) {
     setState(() {
       _categoriaAtual = categoriaSelecionada;
+    });
+  }
+
+  void changedDropDownItemPER(String periodoSelecionado) {
+    setState(() {
+      _periodoAtual = periodoSelecionado;
     });
   }
 
