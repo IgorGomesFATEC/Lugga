@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:haversine/haversine.dart';
 import 'package:location/location.dart';
 
 import './about.dart';
@@ -191,48 +192,65 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id-user'] == currentUserId) {
-      return Container();
-    } else {
-      return Container(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ProductPage()));
-          },
-          //a
-          child: Column(
-            children: <Widget>[
-              new Card(
-                child: new Column(
-                  children: <Widget>[
-                    new Image.asset(
-                      'assets/example.png',
-                      fit: BoxFit.cover,
-                    ),
-                    new Padding(
-                        padding: new EdgeInsets.all(10.0),
-                        child: new Row(
-                          children: <Widget>[
-                            new Padding(
-                              padding: new EdgeInsets.all(1.0),
-                              child: new Text('Nome do produto | R\$24,90',
-                                  style: new TextStyle(fontSize: 12.0),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                          ],
-                        ))
-                  ],
-                ),
-              )
-            ],
-          ),
+    List<String> url = List.from(document['imagens']);
+    String titulo = document['titulo'];
+    double preco = double.parse(document['preco']);
+
+    final harvesine = new Haversine.fromDegrees(
+        latitude1: double.parse(document['latitude']),
+        longitude1: double.parse(document['longitude']),
+        latitude2: latitude,
+        longitude2: longitude);
+    double localiza = harvesine.distance() * 0.001;
+
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ProductPage()));
+        },
+        //a
+        child: Column(
+          children: <Widget>[
+            new Card(
+              child: new Column(
+                children: <Widget>[
+                  url.isNotEmpty
+                      ? Image.network(
+                          url[0],
+                          fit: BoxFit.cover,
+                          height: 155,
+                          width: 200,
+                        )
+                      : new Image.asset(
+                          'assets/img_nao_disp.png',
+                          fit: BoxFit.cover,
+                          height: 155,
+                          width: 200,
+                        ),
+                  new Padding(
+                      padding: new EdgeInsets.all(10.0),
+                      child: new Row(
+                        children: <Widget>[
+                          new Padding(
+                            padding: new EdgeInsets.all(1.0),
+                            child: new Text(
+                                '$titulo | R\$$preco | distancia: ${localiza.floorToDouble()}KM',
+                                style: new TextStyle(fontSize: 12.0),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ],
+                      ))
+                ],
+              ),
+            )
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   @override
@@ -411,8 +429,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     child: StreamBuilder(
-                      stream:
-                          Firestore.instance.collection('anuncio').snapshots(),
+                      stream: Firestore.instance
+                          .collection('anuncio')
+                          .orderBy('latitude')
+                          .snapshots(),
                       builder: (context, snapshot) {
                         print(snapshot.data.documents.length);
                         if (!snapshot.hasData) {
