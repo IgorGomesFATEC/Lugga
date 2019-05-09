@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import './const.dart';
+import './home.dart';
 //import 'package:via_cep/via_cep.dart';
 
 class CreateProductPage extends StatefulWidget {
@@ -30,8 +34,8 @@ class _CreateProductPage extends State<CreateProductPage> {
   Map<String, double> userLocation;
   TextEditingController latitudeCtrl = TextEditingController();
   TextEditingController longitudeCtrl = TextEditingController();
-  List<String> _photos = [];
-  List images;
+  List<String> imagesUrl = [];
+  List<File> images = [];
   File imageFile;
   List<DropdownMenuItem<String>> _dropDownMenuItemsCAT;
   List<DropdownMenuItem<String>> _dropDownMenuItemsPER;
@@ -105,7 +109,10 @@ class _CreateProductPage extends State<CreateProductPage> {
       setState(() {
         isLoading = true;
       });
-      uploadFile();
+      images.add(imageFile);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -114,49 +121,18 @@ class _CreateProductPage extends State<CreateProductPage> {
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putFile(imageFile);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    storageTaskSnapshot.ref.getDownloadURL().then(
+    await storageTaskSnapshot.ref.getDownloadURL().then(
       (downloadUrl) {
-        _photos.add(downloadUrl);
-        for (var i = 0; i < _photos.length; i++) {
-          print('array: ' + _photos[i]);
-          images = List.generate(_photos.length, (x) => imageAtual(_photos[i]));
-        }
         setState(() {
+          imagesUrl.add(downloadUrl);
+          print(imagesUrl.length);
           isLoading = false;
-          //onSendMessage(imageUrl, 1);
         });
       },
     );
     setState(() {
       isLoading = false;
-      //onSendMessage(imageUrl, 1);
     });
-  }
-
-  Widget imageAtual(String url) {
-    return Container(
-      child: Material(
-        child: CachedNetworkImage(
-          imageUrl: url,
-          width: 110.0,
-          height: 110.0,
-          fit: BoxFit.contain,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        clipBehavior: Clip.hardEdge,
-      ),
-      //margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-    );
-  }
-
-//!
-  Widget _buildProductItem(BuildContext context, int index) {
-    return Image.network(
-      images[0],
-      width: 110.0,
-      height: 110.0,
-      fit: BoxFit.contain,
-    );
   }
 
   Widget _arrayPhotos(String url) {
@@ -189,7 +165,8 @@ class _CreateProductPage extends State<CreateProductPage> {
                   blurRadius: 8.0,
                   color: Colors.black54)
             ])),
-        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+        //backgroundColor: Colors.cyan[300],
+        backgroundColor: corTema,
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -212,16 +189,22 @@ class _CreateProductPage extends State<CreateProductPage> {
                     Container(
                       child: Row(
                         children: <Widget>[
-                          _photos.length == 0
+                          images.length == 0
                               ? Container()
-                              : _arrayPhotos(_photos[_photos.length - 1]),
+                              : Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: Image.file(
+                                    images[images.length - 1],
+                                    height: 110,
+                                    width: 110,
+                                  ),
+                                ),
 
                           //Text('${_photos}'),
                           IconButton(
-                            tooltip: 'Camera',
                             icon: Icon(
                               Icons.add_a_photo,
-                              color: Colors.grey,
+                              color: cinza,
                               size: 75,
                             ),
                             onPressed: getImage,
@@ -273,7 +256,7 @@ class _CreateProductPage extends State<CreateProductPage> {
                                   return 'Digite a descrição do Anúncio';
                                 }
                               },
-                              onSaved: (input) => _title = input,
+                              onSaved: (input) => _description = input,
                               decoration: InputDecoration.collapsed(
                                 hintText: 'Descrição *',
                               ),
@@ -297,8 +280,8 @@ class _CreateProductPage extends State<CreateProductPage> {
                                 if (input.toString().isEmpty) {
                                   return 'Coloque a categoria do Anúncio';
                                 }
-                                if (input != 'Categorias') {
-                                  return 'Coloque a categoria do Anuncio';
+                                if (input == 'Categorias') {
+                                  return 'Coloque a categoria do Anuncio!!';
                                 }
                               },
                               onSaved: (input) => _categoriaAtual = input,
@@ -451,9 +434,6 @@ class _CreateProductPage extends State<CreateProductPage> {
                                       if (input.toString().isEmpty) {
                                         return 'Coloque a categoria do Anúncio';
                                       }
-                                      if (input != 'Categorias') {
-                                        return 'Coloque a categoria do Anuncio';
-                                      }
                                     },
                                     onSaved: (input) => _periodoAtual = input,
                                     decoration: InputDecoration.collapsed(
@@ -463,7 +443,38 @@ class _CreateProductPage extends State<CreateProductPage> {
                                 ),
                               )
                             ],
-                          )
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(15),
+                            child: Container(
+                              height: 40,
+                              margin: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Material(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color.fromARGB(255, 5, 243, 255),
+                                shadowColor: Colors.black87,
+                                elevation: 10.0,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    _publicaAnuncio();
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Confirmar Anúncio',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -499,6 +510,57 @@ class _CreateProductPage extends State<CreateProductPage> {
     setState(() {
       _periodoAtual = periodoSelecionado;
     });
+  }
+
+  Future<void> _publicaAnuncio() async {
+    this.setState(() {
+      isLoading = true;
+    });
+    prefs = await SharedPreferences.getInstance();
+    final formState = _formKey.currentState;
+    if (formState.validate() == true) {
+      formState.save();
+      try {
+        if (images.isNotEmpty) {
+          await uploadFile();
+        }
+        var dados = Map<String, dynamic>();
+
+        String uid = prefs.getString('id-usuario') ?? '';
+        dados["categoria"] = _categoriaAtual;
+        dados["descricao"] = _description;
+        dados["latitude"] = _latitude;
+        dados["longitude"] = _longitude;
+        dados["imagens"] = imagesUrl;
+        dados["titulo"] = _title;
+        dados["preco"] = _preco;
+        dados["periodo"] = _periodoAtual;
+        dados["id-anuncio"] = '';
+        dados["id-user"] = uid;
+        Firestore.instance.collection('anuncio').add(dados);
+
+        Fluttertoast.showToast(msg: "Sucesso!!");
+        this.setState(() {
+          isLoading = false;
+        });
+        //Navigator.push(
+        //  context,
+        //MaterialPageRoute(
+        //  builder: (context) => HomePage(currentUserId: uid)));
+      } catch (e) {
+        Fluttertoast.showToast(msg: "${e.toString()}");
+        print(e.toString());
+        this.setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Erro ao criar o anuncio");
+      print('Erro');
+      this.setState(() {
+        isLoading = false;
+      });
+    }
   }
 
 /*  Future<Null> procuraCep(String cepDigitado) async {

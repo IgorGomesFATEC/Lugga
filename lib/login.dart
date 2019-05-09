@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
+import './const.dart';
 import './createAccount.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;
-  String _email, _password,_recovery;
+  String _email, _password, _recovery;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   final GoogleSignIn kGoogleSignIn = GoogleSignIn();
@@ -147,7 +148,7 @@ class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      backgroundColor: new Color.fromARGB(210, 0, 243, 255),
+      backgroundColor: corTema,
       body: Stack(
         children: <Widget>[
           Form(
@@ -268,87 +269,94 @@ class _LoginPage extends State<LoginPage> {
                                     child: Column(
                                       children: <Widget>[
                                         Container(
-                                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                    child: TextFormField(
-                                      validator: (input) {
-                                        //List<DocumentSnapshot> documents;
-                                        //verificaEsqSenha(input).then((val) {
-                                          //setState(() {
-                                            //documents = val;
-                                          //});
-                                        //});
-                                        if (input.isEmpty) {
-                                          return 'Digite um e-mail!';
-                                        } //else if (documents.length == 0) {
-                                          //return 'Email nao existe';
-                                        //}
-                                      },
-                                      onSaved: (input) => _recovery = input,
-                                      style: TextStyle(color: Colors.black),
-                                      decoration: InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.cyan),
-                                        ),
-                                        hintText: 'Digite seu email',
-                                        hintStyle:
-                                            TextStyle(color: Colors.black),
-                                        suffixIcon: GestureDetector(
-                                            onTap: () {},
-                                            child: IconTheme(
-                                              data: IconThemeData(
+                                          padding:
+                                              EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                          child: TextFormField(
+                                            validator: (input) {
+                                              //List<DocumentSnapshot> documents;
+                                              //verificaEsqSenha(input).then((val) {
+                                              //setState(() {
+                                              //documents = val;
+                                              //});
+                                              //});
+                                              if (input.isEmpty) {
+                                                return 'Digite um e-mail!';
+                                              } //else if (documents.length == 0) {
+                                              //return 'Email nao existe';
+                                              //}
+                                            },
+                                            onSaved: (input) =>
+                                                _recovery = input,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            decoration: InputDecoration(
+                                              focusedBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.cyan),
+                                              ),
+                                              hintText: 'Digite seu email',
+                                              hintStyle: TextStyle(
+                                                  color: Colors.black),
+                                              suffixIcon: GestureDetector(
+                                                  onTap: () {},
+                                                  child: IconTheme(
+                                                    data: IconThemeData(
+                                                      color: Colors.black,
+                                                    ),
+                                                    child: Icon(Icons.email),
+                                                  )),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
                                                 color: Colors.black,
-                                              ),
-                                              child:
-                                                  Icon(Icons.email),
-                                            )),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                          color: Colors.black,
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  Container(
-                                    height: 40,
-                                    width: 172,
-                                    margin: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black12),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(20),
-                                      shadowColor: Colors.black87,
-                                      //color: Colors.red,
-                                      elevation: 10.0,
-                                      child: MaterialButton(
-                                        onPressed: enviarEmail,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                        
-                                            Center(
-                                              child: Text(
-                                                'Enviar Email',
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            )
-                                          ],
+                                              )),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          width: 172,
+                                          margin: EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.black12),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Material(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            shadowColor: Colors.black87,
+                                            //color: Colors.red,
+                                            elevation: 10.0,
+                                            child: MaterialButton(
+                                              onPressed: enviarEmail,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Center(
+                                                    child: Text(
+                                                      'Enviar Email',
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   )
-                                  
                                 ],
                               );
                             }),
@@ -576,7 +584,7 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  Future <List<DocumentSnapshot>> verificaEsqSenha(String email) async {
+  Future<List<DocumentSnapshot>> verificaEsqSenha(String email) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('email', isEqualTo: email)
@@ -585,21 +593,21 @@ class _LoginPage extends State<LoginPage> {
     return documents;
   }
 
-  Future <void> enviarEmail() async {
+  Future<void> enviarEmail() async {
     var auth = FirebaseAuth.instance;
     final formState = _formKey2.currentState;
     if (formState.validate() == true) {
       formState.save();
-      try{
-        auth.sendPasswordResetEmail(email: _recovery,);
+      try {
+        auth.sendPasswordResetEmail(
+          email: _recovery,
+        );
         Fluttertoast.showToast(msg: 'foi caraio');
         print('foi');
-      }catch(e){
-        Fluttertoast.showToast(msg:e.toString());
+      } catch (e) {
+        Fluttertoast.showToast(msg: e.toString());
       }
-      
-    }
-    else{
+    } else {
       print('nao foi');
     }
   }

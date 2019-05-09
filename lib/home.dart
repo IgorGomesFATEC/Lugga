@@ -10,6 +10,7 @@ import 'package:location/location.dart';
 
 import './about.dart';
 import './camera.dart';
+import './teste.dart';
 import './categoria.dart';
 import './chat.dart';
 import './createProduct.dart';
@@ -17,6 +18,7 @@ import './geolocation.dart';
 import './login.dart';
 import './product.dart';
 import './profile.dart';
+import './const.dart';
 
 class HomePage extends StatefulWidget {
   final String currentUserId;
@@ -189,7 +191,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id-usuario'] == currentUserId) {
+    if (document['id-user'] == currentUserId) {
       return Container();
     } else {
       return Container(
@@ -246,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black54)
             ])),
         iconTheme: new IconThemeData(color: Colors.white),
-        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+        backgroundColor: corTema,
         actions: <Widget>[
           IconButton(
             tooltip: 'Categorias',
@@ -276,7 +278,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             new UserAccountsDrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(127, 60, 243, 255),
+                color: corTema,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
@@ -383,6 +385,15 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
+              title: Text('teste'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Teste()));
+              },
+            ),
+            ListTile(
                 title: Text('Sair'),
                 onTap: () {
                   _signOut();
@@ -403,6 +414,7 @@ class _HomePageState extends State<HomePage> {
                       stream:
                           Firestore.instance.collection('anuncio').snapshots(),
                       builder: (context, snapshot) {
+                        print(snapshot.data.documents.length);
                         if (!snapshot.hasData) {
                           return Center(
                             child: CircularProgressIndicator(
@@ -432,8 +444,7 @@ class _HomePageState extends State<HomePage> {
                   ? Container(
                       child: Center(
                         child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.cyan)),
+                            valueColor: AlwaysStoppedAnimation<Color>(corTema)),
                       ),
                       color: Colors.white.withOpacity(0.8),
                     )
