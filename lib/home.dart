@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haversine/haversine.dart';
 import 'package:location/location.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import './about.dart';
 import './camera.dart';
@@ -73,8 +74,8 @@ class _HomePageState extends State<HomePage> {
     nome = prefs.getString('nome') ?? '';
     foto = prefs.getString('foto-url') ?? '';
     email = prefs.getString('email') ?? '';
-    latitude = prefs.get('latitude') ?? '';
-    longitude = prefs.get('longitude') ?? '';
+    latitude = prefs.get('latitude') ?? 0;
+    longitude = prefs.get('longitude') ?? 0;
 
     this.setState(() {
       isLoading = false;
@@ -205,28 +206,51 @@ class _HomePageState extends State<HomePage> {
 
     return Container(
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => ProductPage()));
+                  builder: (BuildContext context) => ProductPage(
+                        currentProductId: document.documentID,
+                      )));
         },
         //a
         child: Column(
           children: <Widget>[
             new Card(
+              elevation: 7,
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(10))),
               child: new Column(
                 children: <Widget>[
                   url.isNotEmpty
-                      ? Image.network(
-                          url[0],
-                          fit: BoxFit.cover,
-                          height: 155,
-                          width: 200,
+                      ? Container(
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color.fromARGB(127, 0, 243, 255),
+                                    ),
+                                  ),
+                                  width: 155.0,
+                                  height: 200.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                            imageUrl: url[0],
+                            fit: BoxFit.cover,
+                            height: 155,
+                            width: 200,
+                          ),
                         )
                       : new Image.asset(
                           'assets/img_nao_disp.png',
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           height: 155,
                           width: 200,
                         ),
@@ -237,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                           new Padding(
                             padding: new EdgeInsets.all(1.0),
                             child: new Text(
-                                '$titulo | R\$$preco | distancia: ${localiza.floorToDouble()}KM',
+                                '$titulo | R\$$preco | distancia: ${localiza.toStringAsFixed(2)}KM',
                                 style: new TextStyle(fontSize: 12.0),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
@@ -362,7 +386,9 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => ProductPage()));
+                        builder: (BuildContext context) => ProductPage(
+                              currentProductId: currentUserId,
+                            )));
               },
             ),
             ListTile(
