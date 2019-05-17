@@ -48,15 +48,153 @@ class _HomePageState extends State<HomePage> {
   var location = Location();
   Map<String, double> userLocation;
 
+  TextEditingController _searchQuery;
+  bool _isSearching = false;
+  String searchQuery = "Search query"; //apagar
+  String pesquisa = '';
+  var queryResultSet = [];
+  var tempSearchStore = [];
+
   //FirebaseUser _user;
   final GoogleSignIn kGoogleSignIn = GoogleSignIn();
   final kFirebaseAuth = FirebaseAuth.instance;
+  Icon _searchIcon = Icon(
+    Icons.search,
+    color: Colors.white,
+  );
+  Widget _appBarTitle = Text('Lugga',
+      style: TextStyle(color: Colors.white, shadows: <Shadow>[
+        Shadow(offset: Offset(2.0, 2.0), blurRadius: 8.0, color: Colors.black54)
+      ]));
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _searchQuery = new TextEditingController();
     readLocal();
+  }
+
+  void _startSearch() {
+    print("open search box");
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    print("close search box");
+    setState(() {
+      _searchQuery.clear();
+    });
+  }
+
+  Widget _buildSearchField() {
+    return new TextField(
+        controller: _searchQuery,
+        autofocus: true,
+        decoration: const InputDecoration(
+          hintText: 'Search...',
+          border: InputBorder.none,
+          hintStyle: const TextStyle(color: Colors.white30),
+        ),
+        style: const TextStyle(color: Colors.white, fontSize: 16.0),
+        onSubmitted: (val) {
+          initiateSearch(val);
+        });
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        new IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        tooltip: 'Categorias',
+        icon: Icon(
+          Icons.filter_list,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => CategoriaPage()));
+        },
+      ),
+      IconButton(
+        tooltip: 'Pesquisa',
+        icon: _searchIcon,
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  void initiateSearch(value) {
+    print(value);
+    setState(() {
+      pesquisa = value;
+    });
+
+/*
+    if (value.length == 0) {
+      setState(() {
+        queryResultSet = [];
+        tempSearchStore = [];
+      });
+    }
+
+    var capitalizedValue = value.substring(0, 1) + value.substring(1);
+
+    if (queryResultSet.length == 0 && value.length == 1) {
+      searchService(value).then((QuerySnapshot docs) {
+        for (int i = 0; i < docs.documents.length; ++i) {
+          queryResultSet.add(docs.documents[i].data);
+        }
+      });
+    } else {
+      tempSearchStore = [];
+      queryResultSet.forEach((element) {
+        if (element['nome'].startsWith(capitalizedValue)) {
+          setState(() {
+            tempSearchStore.add(element);
+          });
+        }
+      });
+    }*/
+  }
+
+  Future<QuerySnapshot> searchService(String searchField) async {
+    var pesquisa = await Firestore.instance
+        .collection('anuncio')
+        //.where('titulo', isEqualTo: searchField)
+        .getDocuments();
+
+    //if(searchField == Firestore.instance.collection('pesquisas').document('nome')){}
+    return pesquisa;
   }
 
   void readLocal() async {
@@ -206,8 +344,8 @@ class _HomePageState extends State<HomePage> {
 
     return Container(
       child: GestureDetector(
-        onTap: () async {
-          await Navigator.push(
+        onTap: () {
+          Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => ProductPage(
@@ -226,21 +364,17 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   url.isNotEmpty
                       ? Container(
+                          height: 155,
+                          width: 200,
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color.fromARGB(127, 0, 243, 255),
-                                    ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                corTema)),
                                   ),
-                                  width: 155.0,
-                                  height: 200.0,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
+                                  color: Colors.white.withOpacity(0.8),
                                 ),
                             imageUrl: url[0],
                             fit: BoxFit.cover,
@@ -281,39 +415,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: _isSearching ? const BackButton() : null,
         centerTitle: true,
-        title: new Text('Lugga',
-            style: TextStyle(color: Colors.white, shadows: <Shadow>[
-              Shadow(
-                  offset: Offset(2.0, 2.0),
-                  blurRadius: 8.0,
-                  color: Colors.black54)
-            ])),
+        title: _isSearching ? _buildSearchField() : _appBarTitle,
         iconTheme: new IconThemeData(color: Colors.white),
         backgroundColor: corTema,
-        actions: <Widget>[
-          IconButton(
-            tooltip: 'Categorias',
-            icon: Icon(
-              Icons.filter_list,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => CategoriaPage()));
-            },
-          ),
-          IconButton(
-            tooltip: 'Pesquisa',
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-        ],
+        actions: _buildActions(),
       ),
       drawer: Drawer(
         child: ListView(
@@ -455,10 +562,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     child: StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('anuncio')
-                          .orderBy('latitude')
-                          .snapshots(),
+                      stream: pesquisa == ''
+                          ? Firestore.instance
+                              .collection('anuncio')
+                              .orderBy('latitude')
+                              .snapshots()
+                          : Firestore.instance
+                              .collection('anuncio')
+                              .where('titulo', isEqualTo: pesquisa)
+                              .orderBy('latitude')
+                              .snapshots(),
                       builder: (context, snapshot) {
                         print(snapshot.data.documents.length);
                         if (!snapshot.hasData) {

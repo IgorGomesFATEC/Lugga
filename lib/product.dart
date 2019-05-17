@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:haversine/haversine.dart';
+import './comprovante.dart';
 import './const.dart';
 
 class ProductPage extends StatefulWidget {
@@ -48,11 +49,11 @@ class _ProductPage extends State<ProductPage> {
   }
 
   void readLocal() async {
+    prefs = await SharedPreferences.getInstance();
+
     this.setState(() {
       isLoading = true;
     });
-    prefs = await SharedPreferences.getInstance();
-
     DocumentSnapshot documento = await Firestore.instance
         .collection('anuncio')
         .document(currentProductId)
@@ -80,24 +81,15 @@ class _ProductPage extends State<ProductPage> {
 
     distancia = harvesine.distance() * 0.001;
 
-    nomeAnunciante(idUser);
-
-    this.setState(() {
-      isLoading = false;
-    });
-  }
-
-  void nomeAnunciante(String idUser) async {
-    this.setState(() {
-      isLoading = true;
-    });
-    DocumentSnapshot documento =
+    DocumentSnapshot nomeAnunciante =
         await Firestore.instance.collection('users').document(idUser).get();
 
-    nomePessoaAnuncio = documento.data['nome'];
+    nomePessoaAnuncio = await nomeAnunciante.data['nome'];
+
     this.setState(() {
       isLoading = false;
     });
+    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO');
   }
 
   void clicaPhoto() {
@@ -161,24 +153,20 @@ class _ProductPage extends State<ProductPage> {
                 GestureDetector(
                   //onTap: clicaPhoto() ,
                   child: Container(
-                    margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(color: Colors.black87, blurRadius: 10.0)
                       ],
                     ),
+                    margin: EdgeInsets.all(10),
                     child: CachedNetworkImage(
                       placeholder: (context, url) => Container(
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.cyan),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.cyan)),
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                            ),
+                            color: Colors.white.withOpacity(0.8),
                           ),
                       imageUrl: imagens[0],
                       width: 400,
@@ -203,14 +191,16 @@ class _ProductPage extends State<ProductPage> {
                   margin: EdgeInsets.fromLTRB(10, 1, 10, 10),
                   child: Text(
                     'por $nomePessoaAnuncio',
-                    style: TextStyle(),
+                    style: TextStyle(
+                      color: cinza,
+                    ),
                   ),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: EdgeInsets.fromLTRB(10, 10, 1, 10),
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'R\$ $preco',
@@ -220,8 +210,20 @@ class _ProductPage extends State<ProductPage> {
                             color: corTema),
                       ),
                     ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(1, 10, 10, 10),
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        '($periodo)',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.bold,
+                            color: cinza),
+                      ),
+                    ),
                     SizedBox(
-                      width: 120,
+                      width: 40,
                     ),
                     Container(
                       margin: EdgeInsets.all(10),
@@ -231,7 +233,7 @@ class _ProductPage extends State<ProductPage> {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: corTema),
+                            color: cinza),
                       ),
                     ),
                   ],
@@ -241,7 +243,7 @@ class _ProductPage extends State<ProductPage> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.all(10),
-                        child: Divider(color: Colors.black),
+                        child: Divider(color: cinza),
                       ),
                     ),
                     Container(
@@ -258,7 +260,7 @@ class _ProductPage extends State<ProductPage> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.all(10),
-                        child: Divider(color: Colors.black),
+                        child: Divider(color: cinza),
                       ),
                     ),
                   ],
@@ -268,7 +270,9 @@ class _ProductPage extends State<ProductPage> {
                   alignment: Alignment.topLeft,
                   child: Text(
                     '$categoria',
-                    style: TextStyle(),
+                    style: TextStyle(
+                      color: cinza,
+                    ),
                   ),
                 ),
                 Row(
@@ -276,7 +280,7 @@ class _ProductPage extends State<ProductPage> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.all(10),
-                        child: Divider(color: Colors.black),
+                        child: Divider(color: cinza),
                       ),
                     ),
                     Container(
@@ -293,7 +297,7 @@ class _ProductPage extends State<ProductPage> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.all(10),
-                        child: Divider(color: Colors.black),
+                        child: Divider(color: cinza),
                       ),
                     ),
                   ],
@@ -303,7 +307,7 @@ class _ProductPage extends State<ProductPage> {
                   alignment: Alignment.topLeft,
                   child: Text(
                     '$descricao',
-                    style: TextStyle(),
+                    style: TextStyle(color: cinza),
                   ),
                 ),
               ],
@@ -320,7 +324,7 @@ class _ProductPage extends State<ProductPage> {
                     color: Colors.white.withOpacity(0.8),
                   )
                 : Container(),
-          ),
+          )
         ],
       ),
       floatingActionButton: Container(
@@ -328,7 +332,14 @@ class _ProductPage extends State<ProductPage> {
         width: 125.0,
         child: FittedBox(
           child: FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ComprovantePage(
+                            currentProductId: currentProductId,
+                          )));
+            },
             icon: Icon(
               Icons.add_shopping_cart,
               color: Colors.white,
