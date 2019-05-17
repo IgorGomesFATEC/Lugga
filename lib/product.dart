@@ -148,7 +148,14 @@ class _ProductPage extends State<ProductPage> {
                     blurRadius: 8.0,
                     color: Colors.black54)
               ])),
-          backgroundColor: corTema),
+          backgroundColor: corTema,
+          actions: <Widget>[
+            PopupMenuButton(itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(child: Text('Denunciar')),
+              ];
+            })
+          ]),
       body: Stack(
         children: <Widget>[
           Card(
