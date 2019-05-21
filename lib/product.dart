@@ -20,27 +20,26 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPage extends State<ProductPage> {
   final String currentProductId;
-
   _ProductPage({Key key, @required this.currentProductId});
+
   bool photoView = false;
   bool isLoading = false;
 
   SharedPreferences prefs;
 
   List<String> imagens;
-  String title;
-  String idUser;
-  String descricao;
-  String periodo;
-  String categoria;
-  double distancia;
-  double preco;
-  double latitudeProd;
-  double longitudeProd;
-  double latitudeUser;
-  double longitudeUser;
-
-  String nomePessoaAnuncio;
+  String title = '';
+  String idUser = '';
+  String descricao = '';
+  String periodo = '';
+  String categoria = '';
+  double distancia = 0.00;
+  double preco = 0.00;
+  double latitudeProd = 0.00;
+  double longitudeProd = 0.00;
+  double latitudeUser = 0.00;
+  double longitudeUser = 0.00;
+  String nomePessoaAnuncio = '';
 
   @override
   void initState() {
@@ -54,6 +53,7 @@ class _ProductPage extends State<ProductPage> {
     this.setState(() {
       isLoading = true;
     });
+    //imagens.add('');
     DocumentSnapshot documento = await Firestore.instance
         .collection('anuncio')
         .document(currentProductId)
@@ -67,6 +67,8 @@ class _ProductPage extends State<ProductPage> {
     preco = double.parse(await documento.data['preco']);
     latitudeProd = double.parse(await documento.data['latitude']);
     longitudeProd = double.parse(await documento.data['longitude']);
+    //imagens.removeLast();
+    //imagens.add(await documento.data['imagens']);
     imagens = List.from(await documento.data['imagens']);
 
     latitudeUser = prefs.getDouble('latitude') ?? 0;
@@ -160,26 +162,45 @@ class _ProductPage extends State<ProductPage> {
                 GestureDetector(
                   //onTap: clicaPhoto() ,
                   child: Container(
+                    height: 300,
+                    width: 400,
                     decoration: BoxDecoration(
                       boxShadow: [
-                        BoxShadow(color: Colors.black87, blurRadius: 10.0)
+                        BoxShadow(color: Colors.grey[200], blurRadius: 7.0)
                       ],
                     ),
                     margin: EdgeInsets.all(10),
-                    child: CachedNetworkImage(
-                      placeholder: (context, url) => Container(
+                    child: imagens == null
+                        ? Container(
                             child: Center(
                               child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                       Colors.cyan)),
                             ),
                             color: Colors.white.withOpacity(0.8),
-                          ),
-                      imageUrl: imagens[0],
-                      width: 400,
-                      fit: BoxFit.fill,
-                      height: 300,
-                    ),
+                          )
+                        : imagens.isEmpty
+                            ? Image.asset(
+                                'assets/img_nao_disp.png',
+                                fit: BoxFit.contain,
+                                height: 300,
+                                width: 400,
+                              )
+                            : CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.cyan)),
+                                      ),
+                                      color: Colors.white.withOpacity(0.8),
+                                    ),
+                                imageUrl: imagens.first.toString(),
+                                width: 400,
+                                fit: BoxFit.fill,
+                                height: 300,
+                              ),
                   ),
                 ),
                 Container(
@@ -328,7 +349,7 @@ class _ProductPage extends State<ProductPage> {
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.cyan)),
                     ),
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withOpacity(1.0),
                   )
                 : Container(),
           )
