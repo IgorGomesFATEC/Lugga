@@ -56,12 +56,12 @@ class _CreateProductPage extends State<CreateProductPage> {
 
   @override
   void initState() {
+    super.initState();
     _dropDownMenuItemsCAT = getDropDownMenuItemsCAT();
     _categoriaAtual = _dropDownMenuItemsCAT[0].value;
     _dropDownMenuItemsPER = getDropDownMenuItemsPER();
     _periodoAtual = _dropDownMenuItemsPER[0].value;
     getLocation();
-    super.initState();
   }
 
   Future getLocation() async {
