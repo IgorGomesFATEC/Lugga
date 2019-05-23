@@ -21,6 +21,7 @@ import './login.dart';
 import './product.dart';
 import './profile.dart';
 import './const.dart';
+import './payment.dart';
 
 class HomePage extends StatefulWidget {
   final String currentUserId;
@@ -467,6 +468,15 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => ProfilePage()));
+              },
+            ),
+            ListTile(
+              title: Text('Payment'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => CardPage()));
               },
             ),
             ListTile(
