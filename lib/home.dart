@@ -9,19 +9,16 @@ import 'package:haversine/haversine.dart';
 import 'package:location/location.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './about.dart';
-import './camera.dart';
-import './teste.dart';
 import './categoria.dart';
 import './chat.dart';
 import './createProduct.dart';
-import './geolocation.dart';
 import './login.dart';
 import './product.dart';
 import './profile.dart';
 import './meusChats.dart';
 import './const.dart';
 import './payment.dart';
-import 'myProducts.dart';
+import './myProducts.dart';
 
 class HomePage extends StatefulWidget {
   final String currentUserId;
@@ -159,42 +156,11 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       pesquisa = value;
     });
-
-/*
-    if (value.length == 0) {
-      setState(() {
-        queryResultSet = [];
-        tempSearchStore = [];
-      });
-    }
-
-    var capitalizedValue = value.substring(0, 1) + value.substring(1);
-
-    if (queryResultSet.length == 0 && value.length == 1) {
-      searchService(value).then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.documents.length; ++i) {
-          queryResultSet.add(docs.documents[i].data);
-        }
-      });
-    } else {
-      tempSearchStore = [];
-      queryResultSet.forEach((element) {
-        if (element['nome'].startsWith(capitalizedValue)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
-        }
-      });
-    }*/
   }
 
   Future<QuerySnapshot> searchService(String searchField) async {
-    var pesquisa = await Firestore.instance
-        .collection('anuncio')
-        //.where('titulo', isEqualTo: searchField)
-        .getDocuments();
-
-    //if(searchField == Firestore.instance.collection('pesquisas').document('nome')){}
+    var pesquisa =
+        await Firestore.instance.collection('anuncio').getDocuments();
     return pesquisa;
   }
 
@@ -487,6 +453,18 @@ class _HomePageState extends State<HomePage> {
             ),
             Divider(),
             ListTile(
+              title: Text('meus chats'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MeusChatsPage(
+                              currentUserId: currentUserId,
+                            )));
+              },
+            ),
+            Divider(),
+            ListTile(
               title: Text('Pagamento (Build)'),
               onTap: () {
                 Navigator.push(
@@ -495,36 +473,6 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => CardPage()));
               },
             ),
-            /*
-            ListTile(
-              title: Text('Câmera'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => CameraPage()));
-              },
-            ),
-            ListTile(
-              title: Text('Localização'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => GetLocationPage()));
-              },
-            ),
-            ListTile(
-              title: Text('Produto'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => ProductPage(
-                              currentProductId: currentUserId,
-                            )));
-              },
-            ),*/
             Divider(),
             ListTile(
               title: Text('Chat (Build)'),
@@ -535,16 +483,6 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => ChatScreen()));
               },
             ),
-            /*
-            ListTile(
-              title: Text('Login'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => LoginPage()));
-              },
-            ),*/
             Divider(),
             ListTile(
               title: Text('Criar anúncio'),
@@ -566,28 +504,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => AboutPage()));
               },
             ),
-            /*
-            ListTile(
-              title: Text('teste'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Teste()));
-              },
-            ),*/
             Divider(),
-            ListTile(
-              title: Text('meus chats'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => MeusChatsPage(
-                              currentUserId: currentUserId,
-                            )));
-              },
-            ),
             ListTile(
                 title: Text('Sair'),
                 onTap: () {
