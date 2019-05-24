@@ -103,7 +103,7 @@ class _CreateProductPage extends State<CreateProductPage> {
   }
 
   Future getImage() async {
-    imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
       setState(() {
@@ -203,7 +203,7 @@ class _CreateProductPage extends State<CreateProductPage> {
                           //Text('${_photos}'),
                           IconButton(
                             icon: Icon(
-                              Icons.add_a_photo,
+                              Icons.insert_photo,
                               color: cinza,
                               size: 75,
                             ),
@@ -537,16 +537,17 @@ class _CreateProductPage extends State<CreateProductPage> {
         dados["periodo"] = _periodoAtual;
         dados["id-anuncio"] = '';
         dados["id-user"] = uid;
+        dados["status"] = 1;
         Firestore.instance.collection('anuncio').add(dados);
 
         Fluttertoast.showToast(msg: "Sucesso!!");
         this.setState(() {
           isLoading = false;
         });
-        //Navigator.push(
-        //  context,
-        //MaterialPageRoute(
-        //  builder: (context) => HomePage(currentUserId: uid)));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => HomePage(currentUserId: uid)),
+            (Route<dynamic> route) => false);
       } catch (e) {
         Fluttertoast.showToast(msg: "${e.toString()}");
         print(e.toString());

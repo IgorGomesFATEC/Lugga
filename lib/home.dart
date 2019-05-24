@@ -20,6 +20,7 @@ import './geolocation.dart';
 import './login.dart';
 import './product.dart';
 import './profile.dart';
+import './meusChats.dart';
 import './const.dart';
 
 class HomePage extends StatefulWidget {
@@ -364,7 +365,7 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   url.isNotEmpty
                       ? Container(
-                          height: 155,
+                          height: 145,
                           width: 200,
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
@@ -377,26 +378,32 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                             imageUrl: url[0],
-                            fit: BoxFit.cover,
-                            height: 155,
+                            fit: BoxFit.fill,
+                            height: 145,
                             width: 200,
                           ),
                         )
                       : new Image.asset(
                           'assets/img_nao_disp.png',
                           fit: BoxFit.contain,
-                          height: 155,
+                          height: 145,
                           width: 200,
                         ),
-                  new Padding(
-                      padding: new EdgeInsets.all(10.0),
+                  new Container(
+                      padding: new EdgeInsets.all(20.0),
                       child: new Row(
                         children: <Widget>[
-                          new Padding(
-                            padding: new EdgeInsets.all(1.0),
-                            child: new Text(
-                                '$titulo | R\$$preco | distancia: ${localiza.toStringAsFixed(2)}KM',
-                                style: new TextStyle(fontSize: 12.0),
+                          new Container(
+                            padding: new EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: new Text('$titulo |',
+                                style: new TextStyle(fontSize: 15.0),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          new Container(
+                            padding: new EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: new Text(' R\$$preco',
+                                style: new TextStyle(fontSize: 15.0),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
                           ),
@@ -415,7 +422,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: _isSearching ? const BackButton() : null,
         centerTitle: true,
         title: _isSearching ? _buildSearchField() : _appBarTitle,
         iconTheme: new IconThemeData(color: Colors.white),
@@ -545,6 +551,17 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
+              title: Text('meus chats'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MeusChatsPage(
+                              currentUserId: currentUserId,
+                            )));
+              },
+            ),
+            ListTile(
                 title: Text('Sair'),
                 onTap: () {
                   _signOut();
@@ -565,15 +582,16 @@ class _HomePageState extends State<HomePage> {
                       stream: pesquisa == ''
                           ? Firestore.instance
                               .collection('anuncio')
-                              .orderBy('latitude')
+                              .orderBy('titulo')
+                              .where('status', isEqualTo: 1)
                               .snapshots()
                           : Firestore.instance
                               .collection('anuncio')
                               .where('titulo', isEqualTo: pesquisa)
-                              .orderBy('latitude')
+                              .where('status', isEqualTo: 1)
+                              .orderBy('titulo')
                               .snapshots(),
                       builder: (context, snapshot) {
-                        print(snapshot.data.documents.length);
                         if (!snapshot.hasData) {
                           return Center(
                             child: CircularProgressIndicator(
@@ -585,10 +603,11 @@ class _HomePageState extends State<HomePage> {
                           return GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                    mainAxisSpacing: 20, crossAxisCount: 2),
+                              crossAxisCount: 2,
+                            ),
                             scrollDirection: Axis.vertical,
                             semanticChildCount: 2,
-                            padding: EdgeInsets.all(10.0),
+                            // padding: EdgeInsets.all(10.0),
                             itemBuilder: (context, index) => buildItem(
                                 context, snapshot.data.documents[index]),
                             itemCount: snapshot.data.documents.length,
