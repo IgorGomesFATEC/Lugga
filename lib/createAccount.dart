@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-//pages
 import './home.dart';
+import 'package:Lugga/const.dart';
 
 class CreateAccountPage extends StatefulWidget {
   @override
@@ -16,14 +16,14 @@ class _CreateAccountPage extends State<CreateAccountPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseAuth kFirebaseAuth = FirebaseAuth.instance;
   FirebaseUser _user;
-  String _email, _password,_nome;
+  String _email, _password, _nome;
   bool _obscureText = true, isLoading = false, isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      backgroundColor: new Color.fromARGB(210, 0, 243, 255),
+      backgroundColor: corTema,
       appBar: AppBar(
           leading: IconButton(
         icon: Icon(Icons.arrow_back),
@@ -52,7 +52,6 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                     color: Colors.black54)
                               ])),
                       SizedBox(height: 24.0),
-
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(),
@@ -74,9 +73,10 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                 hintStyle: TextStyle(color: Colors.white),
                                 suffixIcon: GestureDetector(
                                     onTap: () {
-                                      Fluttertoast.showToast(msg:'Digite seu nome completo',
-                                      backgroundColor: Colors.black,
-                                      textColor: Colors.white);
+                                      Fluttertoast.showToast(
+                                          msg: 'Digite seu nome completo',
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white);
                                     },
                                     child: IconTheme(
                                       data: IconThemeData(
@@ -117,9 +117,10 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                 hintStyle: TextStyle(color: Colors.white),
                                 suffixIcon: GestureDetector(
                                     onTap: () {
-                                      Fluttertoast.showToast(msg:'Digite o seu email',
-                                      backgroundColor: Colors.black,
-                                      textColor: Colors.white);
+                                      Fluttertoast.showToast(
+                                          msg: 'Digite o seu email',
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white);
                                     },
                                     child: IconTheme(
                                       data: IconThemeData(
@@ -137,7 +138,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                         ),
                       ),
                       SizedBox(height: 30.0),
-                      // "Password" form.
+                      //Password form.
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(),
@@ -152,8 +153,9 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                               validator: (input) {
                                 if (input.isEmpty) {
                                   return 'Digite a senha!';
-                                }else if(input.length>=1 && input.length<8){
-                                  return 'A senha tem que ter no minimo 8 caracteres';
+                                } else if (input.length >= 1 &&
+                                    input.length < 8) {
+                                  return 'A senha tem que ter no mínimo 8 caracteres';
                                 }
                               },
                               style: TextStyle(color: Colors.white),
@@ -195,12 +197,13 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                           children: <Widget>[
                             TextFormField(
                               enabled: this._password != null &&
-                                  this._password.isNotEmpty && this._password.length>=8,
+                                  this._password.isNotEmpty &&
+                                  this._password.length >= 8,
                               validator: (input) {
                                 if (input.isEmpty) {
                                   return 'Confirme sua senha!';
-                                }else if(input != _password){
-                                  return 'As senhas nao estao iguais';
+                                } else if (input != _password) {
+                                  return 'As senhas não estão iguais';
                                 }
                               },
                               style: TextStyle(color: Colors.white),
@@ -235,7 +238,6 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
                           shadowColor: Colors.black87,
-                          //color: Colors.red,
                           elevation: 10.0,
                           child: MaterialButton(
                             onPressed: () {
@@ -276,52 +278,58 @@ class _CreateAccountPage extends State<CreateAccountPage> {
   }
 
   void signUp() async {
-     prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     this.setState(() {
       isLoading = true;
     });
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        FirebaseUser firebaseUser = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+        FirebaseUser firebaseUser = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _password);
 
         //*Verificando se existe
-        if(firebaseUser != null)
-        {
-          final QuerySnapshot result = await Firestore.instance.collection('users').where('id',isEqualTo: firebaseUser.uid).getDocuments();
+        if (firebaseUser != null) {
+          final QuerySnapshot result = await Firestore.instance
+              .collection('users')
+              .where('id', isEqualTo: firebaseUser.uid)
+              .getDocuments();
           final List<DocumentSnapshot> documents = result.documents;
           //*Criando um novo
-          if (documents.length == 0){
-            Firestore.instance.collection('users').document(firebaseUser.uid).setData({
+          if (documents.length == 0) {
+            Firestore.instance
+                .collection('users')
+                .document(firebaseUser.uid)
+                .setData({
               'nome': _nome,
               'foto-url': '',
               'id-usuario': firebaseUser.uid,
               'email': firebaseUser.email
             });
 
-            _user =firebaseUser;
+            _user = firebaseUser;
             await prefs.setString('id-usuario', _user.uid);
             await prefs.setString('nome', _nome);
             await prefs.setString('foto-url', '');
-            await prefs.setString('email', _user.email); 
-          }else{
+            await prefs.setString('email', _user.email);
+          } else {
             await prefs.setString('id-usuario', documents[0]['id-usuario']);
             await prefs.setString('nome', documents[0]['nome']);
             await prefs.setString('foto-url', documents[0]['foto-url']);
             await prefs.setString('email', documents[0]['email']);
           }
-          Fluttertoast.showToast(msg: "Sign in success");
+          Fluttertoast.showToast(msg: "Login com sucesso");
           this.setState(() {
             isLoading = false;
           });
 
-           Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomePage(currentUserId: prefs.getString('id-usuario'))));
-        }else{
-           Fluttertoast.showToast(msg: "Sign in fail");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      HomePage(currentUserId: prefs.getString('id-usuario'))));
+        } else {
+          Fluttertoast.showToast(msg: "Sign in fail");
           this.setState(() {
             isLoading = false;
           });
@@ -329,8 +337,11 @@ class _CreateAccountPage extends State<CreateAccountPage> {
       } catch (e) {
         this.setState(() {
           isLoading = false;
-         });
-        Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.black,textColor: Colors.white);
+        });
+        Fluttertoast.showToast(
+            msg: e.toString(),
+            backgroundColor: Colors.black,
+            textColor: Colors.white);
         print(e.toString());
       }
     }

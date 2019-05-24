@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:Lugga/const.dart';
 
-class ProfilePage extends StatefulWidget {
+class MyProducts extends StatefulWidget {
   @override
-  _ProfilePage createState() => new _ProfilePage();
+  _MyProducts createState() => new _MyProducts();
 }
 
-class _ProfilePage extends State<ProfilePage> {
+class _MyProducts extends State<MyProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +15,7 @@ class _ProfilePage extends State<ProfilePage> {
           color: Colors.white,
         ),
         centerTitle: true,
-        title: new Text("Perfil",
+        title: new Text("Meus Produtos",
             style: TextStyle(color: Colors.white, shadows: <Shadow>[
               Shadow(
                   offset: Offset(2.0, 2.0),
