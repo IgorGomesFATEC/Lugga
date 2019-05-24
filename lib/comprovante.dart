@@ -115,7 +115,6 @@ class _ComprovantePage extends State<ComprovantePage> {
           children: <Widget>[
             Container(
               height: 130,
-              // width: 600,
               margin: EdgeInsets.all(5),
               child: Card(
                 shape: RoundedRectangleBorder(

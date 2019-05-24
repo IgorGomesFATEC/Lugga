@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haversine/haversine.dart';
 import 'package:location/location.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import './about.dart';
 import './camera.dart';
 import './teste.dart';
@@ -22,6 +20,7 @@ import './product.dart';
 import './profile.dart';
 import './const.dart';
 import './payment.dart';
+import 'myProducts.dart';
 
 class HomePage extends StatefulWidget {
   final String currentUserId;
@@ -106,9 +105,9 @@ class _HomePageState extends State<HomePage> {
         controller: _searchQuery,
         autofocus: true,
         decoration: const InputDecoration(
-          hintText: 'Search...',
+          hintText: 'Pesquisa...',
           border: InputBorder.none,
-          hintStyle: const TextStyle(color: Colors.white30),
+          hintStyle: const TextStyle(color: Colors.white),
         ),
         style: const TextStyle(color: Colors.white, fontSize: 16.0),
         onSubmitted: (val) {
@@ -250,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                 EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
-                color: Colors.cyan,
+                color: corTema,
                 margin: EdgeInsets.all(0.0),
                 padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
                 height: 100.0,
@@ -265,14 +264,14 @@ class _HomePageState extends State<HomePage> {
                       margin: EdgeInsets.only(bottom: 10.0),
                     ),
                     Text(
-                      'Exit app',
+                      'Sair do APP',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Are you sure to exit app?',
+                      'Tem certeza que quer sair?',
                       style: TextStyle(color: Colors.white70, fontSize: 14.0),
                     ),
                   ],
@@ -287,14 +286,14 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       child: Icon(
                         Icons.cancel,
-                        color: Colors.cyan,
+                        color: corTema,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
-                      'CANCEL',
+                      'Cancelar',
                       style: TextStyle(
-                          color: Colors.cyan, fontWeight: FontWeight.bold),
+                          color: corTema, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -308,14 +307,14 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       child: Icon(
                         Icons.check_circle,
-                        color: Colors.cyan,
+                        color: corTema,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
-                      'YES',
+                      'Sim',
                       style: TextStyle(
-                          color: Colors.cyan, fontWeight: FontWeight.bold),
+                          color: corTema, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -353,7 +352,6 @@ class _HomePageState extends State<HomePage> {
                         currentProductId: document.documentID,
                       )));
         },
-        //a
         child: Column(
           children: <Widget>[
             new Card(
@@ -396,7 +394,7 @@ class _HomePageState extends State<HomePage> {
                           new Padding(
                             padding: new EdgeInsets.all(1.0),
                             child: new Text(
-                                '$titulo | R\$$preco | distancia: ${localiza.toStringAsFixed(2)}KM',
+                                '$titulo | R\$$preco | ${localiza.toStringAsFixed(2)}KM',
                                 style: new TextStyle(fontSize: 12.0),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
@@ -461,6 +459,7 @@ class _HomePageState extends State<HomePage> {
                             )));
               },
             ),
+            Divider(),
             ListTile(
               title: Text('Meu perfil'),
               onTap: () {
@@ -470,8 +469,19 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => ProfilePage()));
               },
             ),
+            Divider(),
             ListTile(
-              title: Text('Payment'),
+              title: Text('Meus Produtos'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyProducts()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Pagamento (Build)'),
               onTap: () {
                 Navigator.push(
                     context,
@@ -479,6 +489,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => CardPage()));
               },
             ),
+            /*
             ListTile(
               title: Text('Câmera'),
               onTap: () {
@@ -507,9 +518,10 @@ class _HomePageState extends State<HomePage> {
                               currentProductId: currentUserId,
                             )));
               },
-            ),
+            ),*/
+            Divider(),
             ListTile(
-              title: Text('Chat'),
+              title: Text('Chat (Build)'),
               onTap: () {
                 Navigator.push(
                     context,
@@ -517,6 +529,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => ChatScreen()));
               },
             ),
+            /*
             ListTile(
               title: Text('Login'),
               onTap: () {
@@ -525,7 +538,8 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                         builder: (BuildContext context) => LoginPage()));
               },
-            ),
+            ),*/
+            Divider(),
             ListTile(
               title: Text('Criar anúncio'),
               onTap: () {
@@ -536,6 +550,7 @@ class _HomePageState extends State<HomePage> {
                             CreateProductPage()));
               },
             ),
+            Divider(),
             ListTile(
               title: Text('Sobre'),
               onTap: () {
@@ -545,6 +560,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => AboutPage()));
               },
             ),
+            /*
             ListTile(
               title: Text('teste'),
               onTap: () {
@@ -553,7 +569,8 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                         builder: (BuildContext context) => Teste()));
               },
-            ),
+            ),*/
+            Divider(),
             ListTile(
                 title: Text('Sair'),
                 onTap: () {

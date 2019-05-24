@@ -156,14 +156,13 @@ class _CreateProductPage extends State<CreateProductPage> {
           color: Colors.white,
         ),
         centerTitle: true,
-        title: Text("Criar Anúncio ", //+cep.getLogradouro(),
+        title: Text("Criar Anúncio ",
             style: TextStyle(color: Colors.white, shadows: <Shadow>[
               Shadow(
                   offset: Offset(2.0, 2.0),
                   blurRadius: 8.0,
                   color: Colors.black54)
             ])),
-        //backgroundColor: Colors.cyan[300],
         backgroundColor: corTema,
         actions: <Widget>[
           IconButton(
@@ -197,8 +196,6 @@ class _CreateProductPage extends State<CreateProductPage> {
                                     width: 110,
                                   ),
                                 ),
-
-                          //Text('${_photos}'),
                           IconButton(
                             icon: Icon(
                               Icons.add_a_photo,

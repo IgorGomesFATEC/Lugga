@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Lugga/const.dart';
 
 class CategoriaPage extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _CategoriaPage extends State<CategoriaPage> {
                   blurRadius: 8.0,
                   color: Colors.black54)
             ])),
-        backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+        backgroundColor: corTema,
       ),
       body: ListView(
         children: <Widget>[

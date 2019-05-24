@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './home.dart';
+import 'package:Lugga/const.dart';
 
 class CreateAccountPage extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      backgroundColor: new Color.fromARGB(210, 0, 243, 255),
+      backgroundColor: corTema,
       appBar: AppBar(
           leading: IconButton(
         icon: Icon(Icons.arrow_back),
@@ -51,7 +52,6 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                     color: Colors.black54)
                               ])),
                       SizedBox(height: 24.0),
-
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(),
@@ -138,7 +138,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                         ),
                       ),
                       SizedBox(height: 30.0),
-                      // "Password" form.
+                      //Password form.
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(),
@@ -155,7 +155,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                   return 'Digite a senha!';
                                 } else if (input.length >= 1 &&
                                     input.length < 8) {
-                                  return 'A senha tem que ter no minimo 8 caracteres';
+                                  return 'A senha tem que ter no mínimo 8 caracteres';
                                 }
                               },
                               style: TextStyle(color: Colors.white),
@@ -203,7 +203,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                 if (input.isEmpty) {
                                   return 'Confirme sua senha!';
                                 } else if (input != _password) {
-                                  return 'As senhas nao estao iguais';
+                                  return 'As senhas não estão iguais';
                                 }
                               },
                               style: TextStyle(color: Colors.white),
@@ -238,7 +238,6 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
                           shadowColor: Colors.black87,
-                          //color: Colors.red,
                           elevation: 10.0,
                           child: MaterialButton(
                             onPressed: () {
@@ -319,7 +318,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
             await prefs.setString('foto-url', documents[0]['foto-url']);
             await prefs.setString('email', documents[0]['email']);
           }
-          Fluttertoast.showToast(msg: "Sign in success");
+          Fluttertoast.showToast(msg: "Login com sucesso");
           this.setState(() {
             isLoading = false;
           });
