@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:haversine/haversine.dart';
-import './comprovante.dart';
+import './payment.dart';
 import './const.dart';
 
 class ProductPage extends StatefulWidget {
@@ -364,7 +364,7 @@ class _ProductPage extends State<ProductPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => ComprovantePage(
+                      builder: (BuildContext context) => CardPage(
                             currentProductId: currentProductId,
                           )));
             },

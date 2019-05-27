@@ -24,13 +24,13 @@ class _CreateAccountPage extends State<CreateAccountPage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: corTema,
-      appBar: AppBar(
-          leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context, false),
-      )),
       body: Stack(
         children: <Widget>[
+          Container(
+            child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context, false)),
+          ),
           Container(
             child: Form(
               key: _formKey,

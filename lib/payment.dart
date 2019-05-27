@@ -7,23 +7,32 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import './comprovante.dart';
 import './const.dart';
 
 //import 'package:via_cep/via_cep.dart';
 
 class CardPage extends StatefulWidget {
+  final String currentProductId;
+
+  CardPage({Key key, @required this.currentProductId}) : super(key: key);
+
   @override
-  _CardPage createState() => new _CardPage();
+  _CardPage createState() => new _CardPage(currentProductId: currentProductId);
 }
 
 class _CardPage extends State<CardPage> {
+  String currentProductId;
+  _CardPage({Key key, @required this.currentProductId});
+
+  bool isLoading;
+  SharedPreferences prefs;
+  String _numCard, _nomeCard, _validCard, _codCard;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    //bool isLoading;
-    String _numCard, _nome, _valid, _cod;
-
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -67,29 +76,28 @@ class _CardPage extends State<CardPage> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            // NUMERO DO CARTÃO
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom:
-                                        BorderSide(style: BorderStyle.solid))),
-                            padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
-                            margin: EdgeInsets.all(10),
-                            child: TextFormField(
-                              validator: (input) {
-                                if (input.length < 0) {
-                                  return 'Digite o número do cartão';
-                                } else if (input.length > 20) {
-                                  return 'Digite um titulo menor';
-                                }
-                              },
-                              onSaved: (input) => _numCard = input,
-                              decoration: InputDecoration.collapsed(
-                                hintText: 'Número do cartão *',
-                              ),
-                              cursorColor: Colors.grey,
-                              autocorrect: true,
-                            ),
-                          ),
+                              // NUMERO DO CARTÃO
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          style: BorderStyle.solid))),
+                              padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
+                              margin: EdgeInsets.all(10),
+                              child: TextFormField(
+                                validator: (input) {
+                                  if (input.isEmpty) {
+                                    return 'Digite o titulo do Anúncio';
+                                  } else if (input.length > 16) {
+                                    return 'Digite um titulo menor';
+                                  }
+                                },
+                                onSaved: (input) => _numCard = input,
+                                decoration: InputDecoration.collapsed(
+                                  hintText: 'Numero do Cartão*',
+                                ),
+                                cursorColor: Colors.grey,
+                                autocorrect: true,
+                              )),
                           Container(
                             //NOME E SOBRENOME
                             decoration: BoxDecoration(
@@ -104,7 +112,7 @@ class _CardPage extends State<CardPage> {
                                   return 'Digite o nome e sobrenome';
                                 }
                               },
-                              onSaved: (input) => _nome = input,
+                              onSaved: (input) => _nomeCard = input,
                               decoration: InputDecoration.collapsed(
                                 hintText: 'Nomem completo *',
                               ),
@@ -125,7 +133,7 @@ class _CardPage extends State<CardPage> {
                                         return 'Digite a validade do cartão';
                                       }
                                     },
-                                    onSaved: (input) => _valid = input,
+                                    onSaved: (input) => _validCard = input,
                                     style: TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
                                       hintText: 'MM/AA *',
@@ -162,10 +170,10 @@ class _CardPage extends State<CardPage> {
                                         TextInputType.numberWithOptions(),
                                     validator: (input) {
                                       if (input.isEmpty) {
-                                        return 'Digite a validade do cartão';
+                                        return 'Digite o cod de segurança do cartão';
                                       }
                                     },
-                                    onSaved: (input) => _cod = input,
+                                    onSaved: (input) => _codCard = input,
                                     style: TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
                                       hintText: 'Código de segurança *',
@@ -212,7 +220,9 @@ class _CardPage extends State<CardPage> {
                                 shadowColor: Colors.black87,
                                 elevation: 10.0,
                                 child: MaterialButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    confirmar();
+                                  },
                                   child: Center(
                                     child: Text(
                                       'Confirmar Cartão',
@@ -237,5 +247,45 @@ class _CardPage extends State<CardPage> {
         ],
       ),
     );
+  }
+
+  Future<void> confirmar() async {
+    this.setState(() {
+      isLoading = true;
+    });
+    prefs = await SharedPreferences.getInstance();
+    final formState = _formKey.currentState;
+    if (formState.validate() == true) {
+      formState.save();
+      try {
+        await prefs.setString('numCard', _numCard);
+        await prefs.setString('nomeCard', _nomeCard);
+        await prefs.setString('validCard', _validCard);
+        await prefs.setString('codCard', _codCard);
+
+        Fluttertoast.showToast(msg: "Sucesso!!");
+        this.setState(() {
+          isLoading = false;
+        });
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => ComprovantePage(
+                      currentProductId: currentProductId,
+                    )),
+            (Route<dynamic> route) => false);
+      } catch (e) {
+        Fluttertoast.showToast(msg: "${e.toString()}");
+        print(e.toString());
+        this.setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Erro ao criar o anuncio");
+      print('Erro');
+      this.setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
