@@ -26,9 +26,15 @@ class _CreateAccountPage extends State<CreateAccountPage> {
       backgroundColor: corTema,
       body: Stack(
         children: <Widget>[
+          SizedBox(
+            height: 20.0,
+          ),
           Container(
+            margin: EdgeInsets.fromLTRB(15, 35, 10, 10),
             child: IconButton(
                 icon: Icon(Icons.arrow_back),
+                iconSize: 25.0,
+                color: Colors.white,
                 onPressed: () => Navigator.pop(context, false)),
           ),
           Container(
