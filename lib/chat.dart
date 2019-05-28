@@ -248,7 +248,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.image),
                 onPressed: getImage,
-                color: Color.fromARGB(127, 0, 243, 255),
+                color: corTema,
               ),
             ),
             color: Colors.white,
@@ -259,7 +259,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.photo_camera),
                 onPressed: tiraFoto,
-                color: Color.fromARGB(127, 0, 243, 255),
+                color: corTema,
               ),
             ),
             color: Colors.white,
@@ -268,12 +268,15 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: new TextField(
-                style: TextStyle(color: Colors.black, fontSize: 15.0),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.0,
+                    decorationStyle: TextDecorationStyle.wavy),
                 controller: _textController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Digite sua Mensagem',
                   hintStyle: TextStyle(
-                    color: Color.fromARGB(127, 0, 243, 255),
+                    color: corTema,
                   ),
                 ),
                 //focusNode: focusNode,
@@ -287,7 +290,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.send),
                 onPressed: () => onSendMessage(_textController.text, 0),
-                color: Color.fromARGB(127, 0, 243, 255),
+                color: corTema,
               ),
             ),
             color: Colors.white,
