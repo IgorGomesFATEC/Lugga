@@ -152,194 +152,198 @@ class _ProductPage extends State<ProductPage> {
           ]),
       body: Stack(
         children: <Widget>[
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(10),
-            elevation: 7,
-            child: Column(
-              children: <Widget>[
-                GestureDetector(
-                  //onTap: clicaPhoto() ,
-                  child: Container(
-                    height: 300,
-                    width: 400,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(color: Colors.grey[200], blurRadius: 7.0)
+          ListView(
+            children: <Widget>[
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: EdgeInsets.all(10),
+                elevation: 7,
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      //onTap: clicaPhoto() ,
+                      child: Container(
+                        height: 300,
+                        width: 400,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(color: Colors.grey[200], blurRadius: 7.0)
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: imagens == null
+                            ? Container(
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.cyan)),
+                                ),
+                                color: Colors.white.withOpacity(0.8),
+                              )
+                            : imagens.isEmpty
+                                ? Image.asset(
+                                    'assets/img_nao_disp.png',
+                                    fit: BoxFit.contain,
+                                    height: 300,
+                                    width: 400,
+                                  )
+                                : CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(Colors.cyan)),
+                                          ),
+                                          color: Colors.white.withOpacity(0.8),
+                                        ),
+                                    imageUrl: imagens.first.toString(),
+                                    width: 400,
+                                    fit: BoxFit.fill,
+                                    height: 300,
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 1),
+                      child: Text(
+                        '$title',
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: corTema),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.fromLTRB(10, 1, 10, 10),
+                      child: Text(
+                        'por $nomePessoaAnuncio',
+                        style: TextStyle(
+                          color: cinza,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(10, 10, 1, 10),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'R\$ $preco',
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: corTema),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(1, 10, 10, 10),
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            '($periodo)',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.bold,
+                                color: cinza),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Distancia: ${distancia.toStringAsFixed(2)} KM',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: cinza),
+                          ),
+                        ),
                       ],
                     ),
-                    margin: EdgeInsets.all(10),
-                    child: imagens == null
-                        ? Container(
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.cyan)),
-                            ),
-                            color: Colors.white.withOpacity(0.8),
-                          )
-                        : imagens.isEmpty
-                            ? Image.asset(
-                                'assets/img_nao_disp.png',
-                                fit: BoxFit.contain,
-                                height: 300,
-                                width: 400,
-                              )
-                            : CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                    Colors.cyan)),
-                                      ),
-                                      color: Colors.white.withOpacity(0.8),
-                                    ),
-                                imageUrl: imagens.first.toString(),
-                                width: 400,
-                                fit: BoxFit.fill,
-                                height: 300,
-                              ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 1),
-                  child: Text(
-                    '$title',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: corTema),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.fromLTRB(10, 1, 10, 10),
-                  child: Text(
-                    'por $nomePessoaAnuncio',
-                    style: TextStyle(
-                      color: cinza,
-                    ),
-                  ),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10, 10, 1, 10),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'R\$ $preco',
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: corTema),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(1, 10, 10, 10),
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        '($periodo)',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.bold,
-                            color: cinza),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 40,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(color: cinza),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            'Categoria',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: corTema),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(color: cinza),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       margin: EdgeInsets.all(10),
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.topLeft,
                       child: Text(
-                        'Distancia: ${distancia.toStringAsFixed(2)} KM',
+                        '$categoria',
                         style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: cinza),
+                          color: cinza,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(color: cinza),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            'Descrição',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: corTema),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Divider(color: cinza),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        '$descricao',
+                        style: TextStyle(color: cinza),
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Divider(color: cinza),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        'Categoria',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: corTema),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Divider(color: cinza),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    '$categoria',
-                    style: TextStyle(
-                      color: cinza,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Divider(color: cinza),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        'Descrição',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: corTema),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Divider(color: cinza),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    '$descricao',
-                    style: TextStyle(color: cinza),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           Positioned(
             child: isLoading
@@ -376,7 +380,7 @@ class _ProductPage extends State<ProductPage> {
               "Lugga!",
               style: TextStyle(color: Colors.white),
             ),
-            backgroundColor: new Color.fromARGB(127, 0, 243, 255),
+            backgroundColor: corTema,
           ),
         ),
       ),

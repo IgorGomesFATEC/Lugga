@@ -102,7 +102,7 @@ class _CreateProductPage extends State<CreateProductPage> {
   }
 
   Future getImage() async {
-    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
 
     if (imageFile != null) {
       setState(() {
@@ -197,13 +197,15 @@ class _CreateProductPage extends State<CreateProductPage> {
                                     width: 110,
                                   ),
                                 ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.insert_photo,
-                              color: cinza,
-                              size: 75,
+                          Container(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.add_a_photo,
+                                color: cinza,
+                                size: 75,
+                              ),
+                              onPressed: getImage,
                             ),
-                            onPressed: getImage,
                           ),
                         ],
                       ),

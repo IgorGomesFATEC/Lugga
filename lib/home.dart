@@ -158,12 +158,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<QuerySnapshot> searchService(String searchField) async {
-    var pesquisa =
-        await Firestore.instance.collection('anuncio').getDocuments();
-    return pesquisa;
-  }
-
   void readLocal() async {
     this.setState(() {
       isLoading = true;
@@ -526,14 +520,14 @@ class _HomePageState extends State<HomePage> {
                       stream: pesquisa == ''
                           ? Firestore.instance
                               .collection('anuncio')
-                              .orderBy('titulo')
+                              .orderBy('titulo', descending: false)
                               .where('status', isEqualTo: 1)
                               .snapshots()
                           : Firestore.instance
                               .collection('anuncio')
-                              .where('titulo', isEqualTo: pesquisa)
                               .where('status', isEqualTo: 1)
-                              .orderBy('titulo')
+                              .orderBy('titulo', descending: false)
+                              .where('titulo', isEqualTo: pesquisa)
                               .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
