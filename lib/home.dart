@@ -310,8 +310,8 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => ProductPage(
-                        currentProductId: document.documentID,
-                      )));
+                      currentProductId: document.documentID,
+                      currentUserId: currentUserId)));
         },
         child: Column(
           children: <Widget>[

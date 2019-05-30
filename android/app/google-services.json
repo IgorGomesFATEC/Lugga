@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "882108585461-sn66m46po22se50j4g2ago81bd4sm9el.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.zukunfty.lugga",
-            "certificate_hash": "6a349957c88e28658a39b32ec8694772234549d7"
-          }
-        },
-        {
           "client_id": "882108585461-bbejrtqhn0grtv85obn4r299ss1p8mgc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.zukunfty.lugga",
             "certificate_hash": "62447b481357bbbc3a0e6e451a3d50cb41654348"
+          }
+        },
+        {
+          "client_id": "882108585461-sn66m46po22se50j4g2ago81bd4sm9el.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zukunfty.lugga",
+            "certificate_hash": "6a349957c88e28658a39b32ec8694772234549d7"
           }
         },
         {

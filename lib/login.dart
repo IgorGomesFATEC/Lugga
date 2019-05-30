@@ -48,26 +48,34 @@ class _LoginPage extends State<LoginPage> {
     });
 
     prefs = await SharedPreferences.getInstance();
-
-    googleLogin = await kGoogleSignIn.isSignedIn();
-    _user = await kFirebaseAuth.currentUser();
-    if (googleLogin == true) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                HomePage(currentUserId: prefs.getString('id-usuario'))),
-      );
+    try {
+      googleLogin = await kGoogleSignIn.isSignedIn();
+      _user = await kFirebaseAuth.currentUser();
+      if (googleLogin == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage(currentUserId: prefs.getString('id-usuario'))),
+        );
+      }
+      if (_user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage(currentUserId: prefs.getString('id-usuario'))),
+        );
+      }
+      this.setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      this.setState(() {
+        isLoading = false;
+      });
     }
-    if (_user != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                HomePage(currentUserId: prefs.getString('id-usuario'))),
-      );
-    }
-
     this.setState(() {
       isLoading = false;
     });
@@ -602,7 +610,7 @@ class _LoginPage extends State<LoginPage> {
         auth.sendPasswordResetEmail(
           email: _recovery,
         );
-        Fluttertoast.showToast(msg: 'foi caraio');
+        Fluttertoast.showToast(msg: 'Enviado!');
         print('foi');
       } catch (e) {
         Fluttertoast.showToast(msg: e.toString());

@@ -11,16 +11,21 @@ import './const.dart';
 
 class ProductPage extends StatefulWidget {
   final String currentProductId;
+  final String currentUserId;
 
-  ProductPage({Key key, @required this.currentProductId}) : super(key: key);
+  ProductPage(
+      {Key key, @required this.currentProductId, @required this.currentUserId})
+      : super(key: key);
   @override
-  _ProductPage createState() =>
-      _ProductPage(currentProductId: currentProductId);
+  _ProductPage createState() => _ProductPage(
+      currentProductId: currentProductId, currentUserId: currentUserId);
 }
 
 class _ProductPage extends State<ProductPage> {
   final String currentProductId;
-  _ProductPage({Key key, @required this.currentProductId});
+  final String currentUserId;
+  _ProductPage(
+      {Key key, @required this.currentProductId, @required this.currentUserId});
 
   bool photoView = false;
   bool isLoading = false;
@@ -31,6 +36,7 @@ class _ProductPage extends State<ProductPage> {
   String title = '';
   String idUser = '';
   String descricao = '';
+  String idUserLogado = '';
   String periodo = '';
   String categoria = '';
   double distancia = 0.00;
@@ -73,6 +79,7 @@ class _ProductPage extends State<ProductPage> {
 
     latitudeUser = prefs.getDouble('latitude') ?? 0;
     longitudeUser = prefs.getDouble('longitude') ?? 0;
+    idUserLogado = prefs.getString('id-usuario');
 
     final harvesine = new Haversine.fromDegrees(
       latitude1: latitudeProd,
@@ -365,15 +372,19 @@ class _ProductPage extends State<ProductPage> {
         child: FittedBox(
           child: FloatingActionButton.extended(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => CardPage(
-                            currentProductId: currentProductId,
-                          )));
+              if (idUser == currentUserId) {
+                Fluttertoast.showToast(msg: 'Você nao pode alugar seu produto');
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => CardPage(
+                              currentProductId: currentProductId,
+                            )));
+              }
             },
             icon: Icon(
-              Icons.add_shopping_cart,
+              Icons.attach_money,
               color: Colors.white,
             ),
             label: Text(
