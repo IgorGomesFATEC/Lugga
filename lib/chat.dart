@@ -42,7 +42,7 @@ class Chat extends StatelessWidget {
           ),
           backgroundColor: corTema,
           title: new Text(
-            'CHAT',
+            'Chat',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -183,7 +183,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  //esse future metodo serve para upar a imagem para o storage, dps ele pega a url da imagem e envia para
+  //Esse future metodo serve para upar a imagem para o storage, dps ele pega a url da imagem e envia para
   //o metodo onSendMessage
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -200,7 +200,7 @@ class ChatScreenState extends State<ChatScreen> {
       setState(() {
         isLoading = false;
       });
-      Fluttertoast.showToast(msg: 'This file is not an image');
+      Fluttertoast.showToast(msg: 'Isso não é uma imagem!');
     });
   }
 
@@ -329,7 +329,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   //widget para construir o item de acordo com o pedido
   Widget buildItem(int index, DocumentSnapshot document) {
-    //TODO quado acabar o produto implementar o id para fazer a rede de chat
     //nessa parte o app verifica se o 'type' é 0 ou 1 sendo 0 = texto e 1 = imagem e monta seus widget
     if (document['idFrom'] == id) {
       // Right (my message)
@@ -502,7 +501,6 @@ class ChatScreenState extends State<ChatScreen> {
                       ),
               ],
             ),
-
             // Time
             isLastMessageLeft(index)
                 ? Container(
@@ -510,10 +508,7 @@ class ChatScreenState extends State<ChatScreen> {
                       DateFormat('dd MMM kk:mm').format(
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document['timestamp']))),
-                      style: TextStyle(
-                          color: cinza,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
+                      style: TextStyle(color: cinza, fontSize: 10.0),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
                   )

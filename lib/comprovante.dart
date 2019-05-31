@@ -117,7 +117,7 @@ class _ComprovantePage extends State<ComprovantePage> {
     this.setState(() {
       isLoading = false;
     });
-    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO');
+    Fluttertoast.showToast(msg: 'Localização');
   }
 
   @override
@@ -256,7 +256,6 @@ class _ComprovantePage extends State<ComprovantePage> {
                   ),
                 ),
               ),
-              //TODO: anunciante
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.all(5),
@@ -330,7 +329,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Email anunciante: $contatoAnunciante',
+                                  'Email do anunciante: $contatoAnunciante',
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -345,12 +344,11 @@ class _ComprovantePage extends State<ComprovantePage> {
                   ),
                 ),
               ),
-              //TODO: modo de pagamento
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.all(5),
                 child: Text(
-                  'Forma Pagamento',
+                  'Forma de Pagamento',
                   style: TextStyle(
                       color: cinza, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -410,7 +408,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Numero do cartão: $numCard',
+                                  'Número do cartão: $numCard',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontSize: 18,
@@ -421,7 +419,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Data de Validade: $validCard',
+                                  'Data de Vencimento: $validCard',
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -482,7 +480,9 @@ class _ComprovantePage extends State<ComprovantePage> {
         width: 125.0,
         child: FittedBox(
           child: FloatingActionButton.extended(
-            onPressed: () { confirmar(); },
+            onPressed: () {
+              confirmar();
+            },
             icon: Icon(
               Icons.check,
               color: Colors.white,
@@ -513,15 +513,15 @@ class _ComprovantePage extends State<ComprovantePage> {
       this.setState(() {
         isLoading = false;
       });
-       Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Chat(
-                            currentUserId: currentUserId,
-                            fotoAnunciante: fotoUrlAnunciante,
-                            idAnunciante: idUser,
-                            nomeAnunciante: nomeDoAnunciante,
-                          )),
-                  (Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => Chat(
+                    currentUserId: currentUserId,
+                    fotoAnunciante: fotoUrlAnunciante,
+                    idAnunciante: idUser,
+                    nomeAnunciante: nomeDoAnunciante,
+                  )),
+          (Route<dynamic> route) => false);
     } catch (e) {
       Fluttertoast.showToast(msg: "${e.toString()}");
       print(e.toString());
@@ -529,8 +529,7 @@ class _ComprovantePage extends State<ComprovantePage> {
         isLoading = false;
       });
     }
-    Fluttertoast.showToast(msg: "Erro a");
-    print('Erro');
+    Fluttertoast.showToast(msg: "Erro no cartão");
     this.setState(() {
       isLoading = false;
     });

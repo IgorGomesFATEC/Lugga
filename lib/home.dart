@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,14 +9,12 @@ import 'package:location/location.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import './about.dart';
 import './categoria.dart';
-import './chat.dart';
 import './createProduct.dart';
 import './login.dart';
 import './product.dart';
 import './profile.dart';
-import './meusChats.dart';
+import './myChats.dart';
 import './const.dart';
-import './payment.dart';
 import './myProducts.dart';
 
 class HomePage extends StatefulWidget {
@@ -74,7 +71,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startSearch() {
-    print("open search box");
     ModalRoute.of(context)
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
@@ -92,7 +88,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _clearSearchQuery() {
-    print("close search box");
     setState(() {
       _searchQuery.clear();
     });
@@ -179,7 +174,6 @@ class _HomePageState extends State<HomePage> {
     this.setState(() {
       isLoading = false;
     });
-    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO: $latitude $longitude');
     print('LOCALIZAÇÃO: $latitude $longitude');
     setState(() {});
   }
@@ -447,7 +441,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Divider(),
             ListTile(
-              title: Text('meus chats'),
+              title: Text('Minhas conversas'),
               onTap: () {
                 Navigator.push(
                     context,
@@ -455,26 +449,6 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context) => MeusChatsPage(
                               currentUserId: currentUserId,
                             )));
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Pagamento (Build)'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => CardPage()));
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Chat (Build)'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => ChatScreen()));
               },
             ),
             Divider(),

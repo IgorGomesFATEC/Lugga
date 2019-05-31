@@ -2,7 +2,6 @@ import 'package:Lugga/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import './chat.dart';
 
 class MeusChatsPage extends StatefulWidget {
@@ -66,7 +65,7 @@ class _MeusChatsPage extends State<MeusChatsPage> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        'Nickname: ${document['nome']}',
+                        'Nome: ${document['nome']}',
                         style: TextStyle(color: Colors.black),
                       ),
                       alignment: Alignment.centerLeft,
@@ -107,7 +106,7 @@ class _MeusChatsPage extends State<MeusChatsPage> {
             color: Colors.white,
           ),
           centerTitle: true,
-          title: new Text("Meus Chat's",
+          title: new Text("Minhas conversas",
               style: TextStyle(color: Colors.white, shadows: <Shadow>[
                 Shadow(
                     offset: Offset(2.0, 2.0),

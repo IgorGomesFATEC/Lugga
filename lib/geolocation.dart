@@ -59,7 +59,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
                     userLocation["latitude"].toString() +
                     " " +
                     userLocation["longitude"].toString() +
-                    "\n\nKM entre eles:${localiza}")
+                    "\n\nKM entre eles:$localiza")
           ],
         ),
       ),
@@ -80,9 +80,6 @@ class _GetLocationPageState extends State<GetLocationPage> {
     final lat1 = userLocation["latitude"];
     final lon1 = userLocation["longitude"];
 
-    //*PEGAR A LOCALIZAÇÃO DO USUARIO LOGADO: OK
-    //*TODO PEGAR LOCALIZAÇÃO DO PRODUTO: A FAZER
-    //*TODO COMPARAR AS DUAS LOCALIZAÇÕES: A FAZER
     final lat2 = -20.8118; //Rio preto
     final lon2 = -49.3762; //Rio preto
 

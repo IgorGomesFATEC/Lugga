@@ -5,12 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './const.dart';
 import './home.dart';
 //import 'package:via_cep/via_cep.dart';
-import './home.dart';
 
 class CreateProductPage extends StatefulWidget {
   @override
@@ -135,6 +133,7 @@ class _CreateProductPage extends State<CreateProductPage> {
     });
   }
 
+/*
   Widget _arrayPhotos(String url) {
     return Container(
       child: Material(
@@ -149,7 +148,7 @@ class _CreateProductPage extends State<CreateProductPage> {
       ),
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +157,7 @@ class _CreateProductPage extends State<CreateProductPage> {
           color: Colors.white,
         ),
         centerTitle: true,
-        title: Text("Criar Anúncio ",
+        title: Text("Criar Anúncio",
             style: TextStyle(color: Colors.white, shadows: <Shadow>[
               Shadow(
                   offset: Offset(2.0, 2.0),
@@ -401,7 +400,7 @@ class _CreateProductPage extends State<CreateProductPage> {
                                           onTap: () {
                                             Fluttertoast.showToast(
                                                 msg:
-                                                    'Digite o preço diario do anuncio');
+                                                    'Digite o preço diário do anuncio');
                                           },
                                           child: IconTheme(
                                             data: IconThemeData(
@@ -539,7 +538,7 @@ class _CreateProductPage extends State<CreateProductPage> {
         dados["status"] = 1;
         Firestore.instance.collection('anuncio').add(dados);
 
-        Fluttertoast.showToast(msg: "Sucesso!!");
+        Fluttertoast.showToast(msg: "Anuncio criado com sucesso!");
         this.setState(() {
           isLoading = false;
         });
@@ -556,7 +555,6 @@ class _CreateProductPage extends State<CreateProductPage> {
       }
     } else {
       Fluttertoast.showToast(msg: "Erro ao criar o anuncio");
-      print('Erro');
       this.setState(() {
         isLoading = false;
       });

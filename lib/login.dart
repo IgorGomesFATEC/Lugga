@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,15 +13,6 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => new _LoginPage();
 }
-/**
-**Foi feito a localização por parte do login
-**começar a mexer com a parte de cadastro
-*!nao mexer com o produto antes do cadastro
-*TODO:login automatico com firebase auth
-**fazer login apos de cadastrar
-**Fazer Merge com o pedro
-**Patametros mudados de $user para $currentuserid 
-**/
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;
@@ -339,7 +329,6 @@ class _LoginPage extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                             shadowColor: Colors.black87,
-                                            //color: Colors.red,
                                             elevation: 10.0,
                                             child: MaterialButton(
                                               onPressed: enviarEmail,
@@ -483,7 +472,7 @@ class _LoginPage extends State<LoginPage> {
             await prefs.setString('foto-url', documents[0]['foto-url']);
             await prefs.setString('email', documents[0]['email']);
           } else {
-            Fluttertoast.showToast(msg: 'Usuario nao existente');
+            Fluttertoast.showToast(msg: 'Usuário não existente');
             this.setState(() {
               isLoading = false;
             });
@@ -494,7 +483,7 @@ class _LoginPage extends State<LoginPage> {
                   builder: (context) =>
                       HomePage(currentUserId: prefs.getString('id-usuario'))));
         } else {
-          Fluttertoast.showToast(msg: 'Usuario nulo');
+          Fluttertoast.showToast(msg: 'Usuário nulo');
           this.setState(() {
             isLoading = false;
           });
@@ -564,7 +553,7 @@ class _LoginPage extends State<LoginPage> {
           await prefs.setString('foto-url', documents[0]['foto-url']);
           await prefs.setString('email', documents[0]['email']);
         }
-        Fluttertoast.showToast(msg: "Sign in success");
+        Fluttertoast.showToast(msg: "Login com sucesso!");
         this.setState(() {
           isLoading = false;
         });
@@ -575,7 +564,7 @@ class _LoginPage extends State<LoginPage> {
                 builder: (context) =>
                     HomePage(currentUserId: prefs.getString('id-usuario'))));
       } else {
-        Fluttertoast.showToast(msg: "Sign in fail");
+        Fluttertoast.showToast(msg: "Login falhou, tente novamente!");
         this.setState(() {
           isLoading = false;
         });
@@ -610,14 +599,11 @@ class _LoginPage extends State<LoginPage> {
         auth.sendPasswordResetEmail(
           email: _recovery,
         );
-        Fluttertoast.showToast(msg: 'Enviado!');
-        print('foi');
+        Fluttertoast.showToast(msg: 'Enviado sua solicitação');
       } catch (e) {
         Fluttertoast.showToast(msg: e.toString());
       }
-    } else {
-      print('nao foi');
-    }
+    } else {}
   }
   /* showModalBottomSheet(
                           context: context,
