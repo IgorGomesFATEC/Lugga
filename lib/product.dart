@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,40 +98,12 @@ class _ProductPage extends State<ProductPage> {
     this.setState(() {
       isLoading = false;
     });
-    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO');
   }
 
   void clicaPhoto() {
     this.setState(() {
       photoView = true;
     });
-  }
-
-  Widget _photoGallery() {
-    if (photoView == false) {
-      return Container();
-    } else {
-      return Container(
-        child: PhotoViewGallery(
-          pageOptions: <PhotoViewGalleryPageOptions>[
-            PhotoViewGalleryPageOptions(
-              imageProvider: AssetImage("assets/example.png"),
-              heroTag: "tag1",
-            ),
-            PhotoViewGalleryPageOptions(
-                imageProvider: AssetImage("assets/googleG.png"),
-                heroTag: "tag2",
-                maxScale: PhotoViewComputedScale.contained * 0.3),
-            PhotoViewGalleryPageOptions(
-              imageProvider: AssetImage("assets/profile.png"),
-              initialScale: PhotoViewComputedScale.contained * 0.98,
-              heroTag: "tag3",
-            ),
-          ],
-          backgroundDecoration: BoxDecoration(color: Colors.black),
-        ),
-      );
-    }
   }
 
   @override
@@ -396,7 +366,8 @@ class _ProductPage extends State<ProductPage> {
           child: FloatingActionButton.extended(
             onPressed: () {
               if (idUser == currentUserId) {
-                Fluttertoast.showToast(msg: 'Você nao pode alugar seu produto');
+                Fluttertoast.showToast(
+                    msg: 'Você não pode alugar o seu produto');
               } else {
                 Navigator.push(
                     context,

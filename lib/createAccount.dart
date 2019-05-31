@@ -47,7 +47,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('Criar Conta',
+                      Text('Criar uma Conta',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 45,
@@ -80,7 +80,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                                 suffixIcon: GestureDetector(
                                     onTap: () {
                                       Fluttertoast.showToast(
-                                          msg: 'Digite seu nome completo',
+                                          msg: 'Digite seu nome',
                                           backgroundColor: Colors.black,
                                           textColor: Colors.white);
                                     },
@@ -335,7 +335,7 @@ class _CreateAccountPage extends State<CreateAccountPage> {
                   builder: (context) =>
                       HomePage(currentUserId: prefs.getString('id-usuario'))));
         } else {
-          Fluttertoast.showToast(msg: "Sign in fail");
+          Fluttertoast.showToast(msg: "Login falhou, tente novamente!");
           this.setState(() {
             isLoading = false;
           });

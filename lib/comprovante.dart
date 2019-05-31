@@ -117,7 +117,7 @@ class _ComprovantePage extends State<ComprovantePage> {
     this.setState(() {
       isLoading = false;
     });
-    Fluttertoast.showToast(msg: 'LOCALIZAÇÃO');
+    Fluttertoast.showToast(msg: 'Localização');
   }
 
   @override
@@ -329,7 +329,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Email anunciante: $contatoAnunciante',
+                                  'Email do anunciante: $contatoAnunciante',
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -348,7 +348,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.all(5),
                 child: Text(
-                  'Forma Pagamento',
+                  'Forma de Pagamento',
                   style: TextStyle(
                       color: cinza, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -408,7 +408,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Numero do cartão: $numCard',
+                                  'Número do cartão: $numCard',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontSize: 18,
@@ -419,7 +419,7 @@ class _ComprovantePage extends State<ComprovantePage> {
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                 child: Text(
-                                  'Data de Validade: $validCard',
+                                  'Data de Vencimento: $validCard',
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -529,8 +529,7 @@ class _ComprovantePage extends State<ComprovantePage> {
         isLoading = false;
       });
     }
-    Fluttertoast.showToast(msg: "Erro a");
-    print('Erro');
+    Fluttertoast.showToast(msg: "Erro no cartão");
     this.setState(() {
       isLoading = false;
     });

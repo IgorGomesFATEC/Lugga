@@ -3,10 +3,10 @@ import 'package:Lugga/const.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
-  _ProfilePage createState() => new _ProfilePage();
+  _ProfilePageState createState() => new _ProfilePageState();
 }
 
-class _ProfilePage extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +23,21 @@ class _ProfilePage extends State<ProfilePage> {
                   color: Colors.black54)
             ])),
         backgroundColor: corTema,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Center(
+              child: Text(
+                'Nessa tela deverá conter dados do usuário como:\n\n Nome, Produtos locados, Foto, Descrição, e outras customizações',
+                style: TextStyle(fontSize: 20.0),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

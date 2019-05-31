@@ -276,7 +276,6 @@ class _CardPage extends State<CardPage> {
       }
     } else {
       Fluttertoast.showToast(msg: "Erro ao criar o anuncio");
-      print('Erro');
       this.setState(() {
         isLoading = false;
       });
