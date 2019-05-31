@@ -10,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import './const.dart';
 import './home.dart';
 //import 'package:via_cep/via_cep.dart';
-import './home.dart';
 
 class CreateProductPage extends StatefulWidget {
   @override

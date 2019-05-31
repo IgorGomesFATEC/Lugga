@@ -329,7 +329,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   //widget para construir o item de acordo com o pedido
   Widget buildItem(int index, DocumentSnapshot document) {
-    //TODO quado acabar o produto implementar o id para fazer a rede de chat
     //nessa parte o app verifica se o 'type' é 0 ou 1 sendo 0 = texto e 1 = imagem e monta seus widget
     if (document['idFrom'] == id) {
       // Right (my message)

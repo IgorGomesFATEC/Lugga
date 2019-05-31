@@ -256,7 +256,6 @@ class _ComprovantePage extends State<ComprovantePage> {
                   ),
                 ),
               ),
-              //TODO: anunciante
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.all(5),
@@ -345,7 +344,6 @@ class _ComprovantePage extends State<ComprovantePage> {
                   ),
                 ),
               ),
-              //TODO: modo de pagamento
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.all(5),
@@ -482,7 +480,9 @@ class _ComprovantePage extends State<ComprovantePage> {
         width: 125.0,
         child: FittedBox(
           child: FloatingActionButton.extended(
-            onPressed: () { confirmar(); },
+            onPressed: () {
+              confirmar();
+            },
             icon: Icon(
               Icons.check,
               color: Colors.white,
@@ -513,15 +513,15 @@ class _ComprovantePage extends State<ComprovantePage> {
       this.setState(() {
         isLoading = false;
       });
-       Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Chat(
-                            currentUserId: currentUserId,
-                            fotoAnunciante: fotoUrlAnunciante,
-                            idAnunciante: idUser,
-                            nomeAnunciante: nomeDoAnunciante,
-                          )),
-                  (Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => Chat(
+                    currentUserId: currentUserId,
+                    fotoAnunciante: fotoUrlAnunciante,
+                    idAnunciante: idUser,
+                    nomeAnunciante: nomeDoAnunciante,
+                  )),
+          (Route<dynamic> route) => false);
     } catch (e) {
       Fluttertoast.showToast(msg: "${e.toString()}");
       print(e.toString());

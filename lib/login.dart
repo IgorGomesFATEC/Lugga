@@ -14,15 +14,15 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => new _LoginPage();
 }
-/**
-**Foi feito a localização por parte do login
-**começar a mexer com a parte de cadastro
-*!nao mexer com o produto antes do cadastro
-*TODO:login automatico com firebase auth
-**fazer login apos de cadastrar
-**Fazer Merge com o pedro
-**Patametros mudados de $user para $currentuserid 
-**/
+/*
+* *Foi feito a localização por parte do login
+* *começar a mexer com a parte de cadastro
+* *nao mexer com o produto antes do cadastro
+* *login automatico com firebase auth
+* *fazer login apos de cadastrar
+* *Fazer Merge com o pedro
+* *Patametros mudados de $user para $currentuserid 
+* */
 
 class _LoginPage extends State<LoginPage> {
   bool _obscureText = true;

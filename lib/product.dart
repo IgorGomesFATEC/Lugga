@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:haversine/haversine.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import './payment.dart';
 import './const.dart';
 
@@ -27,6 +28,7 @@ class _ProductPage extends State<ProductPage> {
   _ProductPage(
       {Key key, @required this.currentProductId, @required this.currentUserId});
 
+  Email emailReport;
   bool photoView = false;
   bool isLoading = false;
 
@@ -151,11 +153,32 @@ class _ProductPage extends State<ProductPage> {
               ])),
           backgroundColor: corTema,
           actions: <Widget>[
-            PopupMenuButton(itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(child: Text('Denunciar')),
-              ];
-            })
+            IconButton(
+              icon: Icon(
+                Icons.info_outline,
+              ),
+              onPressed: () async {
+                setState(() {
+                  this.isLoading = true;
+                });
+                emailReport = Email(
+                    body: 'email teste',
+                    subject: 'email teste',
+                    recipients: ['iagomes95@gmail.com'],
+                    cc: ['contatolugga@gmail.com']);
+                setState(() {
+                  this.isLoading = false;
+                });
+                try {
+                  await FlutterEmailSender.send(emailReport);
+                } catch (e) {
+                  Fluttertoast.showToast(msg: 'Erro: ${e.toString()}');
+                  setState(() {
+                    this.isLoading = false;
+                  });
+                }
+              },
+            ),
           ]),
       body: Stack(
         children: <Widget>[
