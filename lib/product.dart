@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:haversine/haversine.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+//import 'package:flutter_email_sender/flutter_email_sender.dart';
 import './payment.dart';
 import './const.dart';
 
@@ -26,7 +26,7 @@ class _ProductPage extends State<ProductPage> {
   _ProductPage(
       {Key key, @required this.currentProductId, @required this.currentUserId});
 
-  Email emailReport;
+  //Email emailReport;
   bool photoView = false;
   bool isLoading = false;
 
@@ -128,6 +128,8 @@ class _ProductPage extends State<ProductPage> {
                 Icons.info_outline,
               ),
               onPressed: () async {
+                Fluttertoast.showToast(msg: 'Em manuteção');
+                /*
                 setState(() {
                   this.isLoading = true;
                 });
@@ -146,7 +148,7 @@ class _ProductPage extends State<ProductPage> {
                   setState(() {
                     this.isLoading = false;
                   });
-                }
+                }*/
               },
             ),
           ]),

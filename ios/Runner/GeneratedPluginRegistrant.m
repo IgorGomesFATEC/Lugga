@@ -7,7 +7,6 @@
 #import <firebase_auth/FirebaseAuthPlugin.h>
 #import <firebase_core/FirebaseCorePlugin.h>
 #import <firebase_storage/FirebaseStoragePlugin.h>
-#import <flutter_email_sender/FlutterEmailSenderPlugin.h>
 #import <fluttertoast/FluttertoastPlugin.h>
 #import <google_sign_in/GoogleSignInPlugin.h>
 #import <image_picker/ImagePickerPlugin.h>
@@ -23,7 +22,6 @@
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
-  [FlutterEmailSenderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterEmailSenderPlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
