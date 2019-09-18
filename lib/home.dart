@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haversine/haversine.dart';
@@ -289,7 +290,10 @@ class _HomePageState extends State<HomePage> {
     List<String> url = List.from(document['imagens']);
     String titulo = document['titulo'];
     double preco = double.parse(document['preco']);
-
+    Fluttertoast.showToast(
+      msg:
+          "O aplicativo está em processo de desenvolvimento, obrigado pelo download!",
+    );
     final harvesine = new Haversine.fromDegrees(
         latitude1: double.parse(document['latitude']),
         longitude1: double.parse(document['longitude']),
@@ -322,14 +326,13 @@ class _HomePageState extends State<HomePage> {
                           width: 200,
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                corTema)),
-                                  ),
-                                  color: Colors.white.withOpacity(0.8),
-                                ),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                    valueColor:
+                                        AlwaysStoppedAnimation<Color>(corTema)),
+                              ),
+                              color: Colors.white.withOpacity(0.8),
+                            ),
                             imageUrl: url[0],
                             fit: BoxFit.fill,
                             height: 145,
